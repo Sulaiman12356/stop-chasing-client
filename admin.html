@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Admin | Stop Chasing Clients</title>
+<style>
+:root{--k:#000;--y:#FFC400;--o:#F8F8F6;--g:#6B6B6B;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--o);color:#161616;font:15px/1.5 system-ui,Inter,sans-serif}
+header{background:var(--k);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}header b{letter-spacing:1px}header span{background:var(--y);color:#000;font-size:12px;font-weight:700;padding:3px 8px}
+main{max-width:1200px;margin:0 auto;padding:20px}.warn{background:#fff7d6;border-left:5px solid var(--y);padding:12px 16px;margin-bottom:18px;font-size:14px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.k div,.box{background:#fff;border:1px solid #ddd;padding:14px}.k small{color:var(--g);display:block}.k b{font-size:22px}
+h2{font-size:17px;margin:26px 0 10px}.fn div{display:flex;align-items:center;gap:10px;margin:6px 0}.fn i{display:block;height:26px;background:var(--k);min-width:4px}.fn em{font-style:normal;font-size:13px}.fn span{width:170px;font-size:13px;flex:none}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}input,select,button{font:inherit;padding:9px 10px;border:1px solid #999;background:#fff;border-radius:3px}button{background:var(--k);color:var(--y);border:0;font-weight:700;cursor:pointer}button.l{background:#fff;color:#000;border:1px solid #000}
+.tw{overflow-x:auto;background:#fff;border:1px solid #ddd}table{border-collapse:collapse;width:100%;font-size:13px;min-width:880px}th,td{padding:9px 10px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}th{background:#f0efe9;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.bd{font-weight:700;font-size:11px;padding:3px 7px;border:1px solid #000;display:inline-block}.ok{background:var(--y)}:focus-visible{outline:3px solid var(--y);outline-offset:2px}.empty{padding:20px;color:var(--g)}
+.g2{display:grid;gap:14px}@media(min-width:800px){.g2{grid-template-columns:1fr 1fr 1fr}}
+#lg{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9}body.in #lg{display:none}#lf{background:#fff;padding:26px;width:min(380px,92vw);display:grid;gap:12px}#lf label{display:grid;gap:4px;font-weight:600}main{display:none}body.in main{display:block}</style></head><body>
+<header><b>STOP CHASING CLIENTS | ADMIN</b><span id="mode"></span> <button class="l" id="lo">Log out</button></header><main>
+<div id="lg"><form id="lf"><h2 style="margin:0">Admin login</h2><label>Username<input id="lu" autocomplete="username" required></label><label>Password<input id="lp" type="password" autocomplete="current-password" required></label><div class="err" id="le" role="alert" style="color:#b00020;min-height:18px"></div><button>Sign in</button></form></div>
+<div class="k" id="k"></div>
+<h2>Conversion funnel</h2><div class="box fn" id="fn"></div>
+<h2>Orders</h2><div class="bar"><input id="q" placeholder="Search name, email, phone, ID" aria-label="Search"><select id="st" aria-label="Status filter"><option value="">All statuses</option></select><input type="date" id="d1" aria-label="From date"><input type="date" id="d2" aria-label="To date"><button id="csv">Export CSV</button><button class="l" id="exj">Export JSON</button></div>
+<div class="tw" id="ot"></div>
+<h2>Attribution</h2><div class="g2" id="at"></div>
+<h2>Settings</h2><div class="box">Prices, bank details, WhatsApp number and launch deadline are set in the CFG block at the top of public/index.html. The confirmed price used for orders is the PRICE server setting. Meta Pixel ID, Dataset ID, access token and API version belong in the server environment variables.</div>
+</main>
+<script>
+var STATUS=["PENDING_PAYMENT","PAYMENT_REPORTED","PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED","CANCELLED","REFUNDED"],PAID=["PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED"];
+/* Store: replace these four functions with fetch() calls to your authenticated API when the backend exists. */
+var DB={orders:[],events:[]},Store={get:function(k){return k=="scc_orders"?DB.orders:DB.events},set:function(){}};
+async function api(u,o){var r=await fetch(u,Object.assign({credentials:"same-origin",headers:{"Content-Type":"application/json"}},o||{}));if(r.status==401){document.body.classList.remove("in");throw 0}return r.json()}
+async function pull(){DB=await api("/api/admin/data");render()}
+var $=function(i){return document.getElementById(i)},esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return"&#"+c.charCodeAt(0)+";"})},fmt=function(n){return"\u20A6"+Math.round(n).toLocaleString("en-NG")},pct=function(a,b){return b?(a/b*100).toFixed(1)+"%":"0%"},dt=function(t){return t?new Date(t).toLocaleString("en-NG",{dateStyle:"medium",timeStyle:"short"}):""};
+$("mode").textContent="LIVE";$("st").innerHTML+=STATUS.map(function(s){return"<option>"+s+"</option>"}).join("");
+function cnt(ev,n){return ev.filter(function(e){return e.n==n}).length}
+function render(){var o=Store.get("scc_orders"),ev=Store.get("scc_events"),paid=o.filter(function(x){return PAID.indexOf(x.status)>-1}),rev=paid.reduce(function(s,x){return s+x.amount},0),v=cnt(ev,"view");
+var K=[["Total visitors",v],["Total leads",o.length],["Checkout initiations",cnt(ev,"checkout")],["WhatsApp clicks",cnt(ev,"wa")],["Payments pending",o.filter(function(x){return x.status=="PENDING_PAYMENT"||x.status=="PAYMENT_REPORTED"}).length],["Payments confirmed",paid.length],["Confirmed revenue",fmt(rev)],["Conversion rate",pct(paid.length,v)],["Average order value",paid.length?fmt(rev/paid.length):fmt(0)]];
+$("k").innerHTML=K.map(function(x){return"<div><small>"+x[0]+"</small><b>"+x[1]+"</b></div>"}).join("");
+var F=[["Visitors",v],["CTA clicks",cnt(ev,"cta")],["Leads",o.length],["Payment instructions viewed",cnt(ev,"checkout")],["WhatsApp confirmations",cnt(ev,"wa")],["Confirmed payments",paid.length],["Purchases recorded",cnt(ev,"purchase")]];
+$("fn").innerHTML=v?F.map(function(x,i){return'<div><span>'+x[0]+'</span><i style="width:'+Math.max(1,x[1]/(F[0][1]||1)*70)+'%"></i><em>'+x[1]+(i?" ("+pct(x[1],F[i-1][1])+" of previous)":"")+"</em></div>"}).join(""):'<div class="empty">No data yet.</div>';
+var q=$("q").value.toLowerCase(),s=$("st").value,a=$("d1").value?new Date($("d1").value).getTime():0,b=$("d2").value?new Date($("d2").value).getTime()+864e5:1e15;
+var r=o.filter(function(x){return(!s||x.status==s)&&x.created>=a&&x.created<b&&(!q||(x.name+x.email+x.phone+x.id).toLowerCase().indexOf(q)>-1)}).sort(function(m,n){return n.created-m.created});
+$("ot").innerHTML=r.length?"<table><tr><th>Order ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Amount</th><th>Status</th><th>Created</th><th>Confirmed</th><th>Source</th><th>Campaign</th><th>Device</th><th>WhatsApp</th></tr>"+r.map(function(x){return"<tr><td>"+esc(x.id)+"</td><td>"+esc(x.name)+"</td><td>"+esc(x.email)+"</td><td>"+esc(x.phone)+"</td><td>"+fmt(x.amount)+'</td><td><select data-id="'+esc(x.id)+'" aria-label="Status for '+esc(x.id)+'">'+STATUS.map(function(t){return"<option"+(t==x.status?" selected":"")+">"+t+"</option>"}).join("")+"</select></td><td>"+dt(x.created)+"</td><td>"+dt(x.confirmed)+"</td><td>"+esc(x.src)+" (first: "+esc(x.fsrc)+")</td><td>"+esc(x.camp)+"</td><td>"+esc(x.dev)+'</td><td><span class="bd '+(x.wa?"ok":"")+'">'+(x.wa?"CLICKED":"NO")+"</span></td></tr>"}).join("")+"</table>":'<div class="empty">No orders match.</div>';
+function grp(key,t){var m={};o.forEach(function(x){var k=x[key]||"(none)";m[k]=m[k]||{n:0,p:0,r:0};m[k].n++;if(PAID.indexOf(x.status)>-1){m[k].p++;m[k].r+=x.amount}});var ks=Object.keys(m);return'<div class="box"><b>'+t+"</b>"+(ks.length?'<table style="min-width:0;margin-top:8px"><tr><th>Name</th><th>Leads</th><th>Paid</th><th>Revenue</th></tr>'+ks.map(function(k){return"<tr><td>"+esc(k)+"</td><td>"+m[k].n+"</td><td>"+m[k].p+"</td><td>"+fmt(m[k].r)+"</td></tr>"}).join("")+"</table>":'<div class="empty">No data yet.</div>')+"</div>"}
+$("at").innerHTML=grp("src","By source")+grp("camp","By campaign")+grp("dev","By device")}
+$("ot").addEventListener("change",async function(e){var id=e.target.dataset.id;if(!id)return;try{await api("/api/admin/orders/"+encodeURIComponent(id),{method:"PATCH",body:JSON.stringify({status:e.target.value})});pull()}catch(x){}});
+["q","st","d1","d2"].forEach(function(i){$(i).addEventListener("input",render)});
+async function dl(name,text,type){try{var d=window.claude&&await claude.use("downloads");if(d){await d.save({filename:name,data:text});return}}catch(x){}var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:type}));a.download=name;a.click()}
+$("csv").onclick=function(){location.href="/api/admin/export.csv"};
+$("exj").onclick=function(){dl("scc-data.json",JSON.stringify({orders:Store.get("scc_orders"),events:Store.get("scc_events")}),"application/json")};
+
+async function boot(){try{await pull();document.body.classList.add("in")}catch(x){}}
+$("lf").addEventListener("submit",async function(e){e.preventDefault();$("le").textContent="";try{var r=await fetch("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:$("lu").value,pass:$("lp").value})});if(!r.ok){$("le").textContent=r.status==429?"Too many attempts. Try again in 15 minutes.":"Incorrect username or password.";return}$("lp").value="";boot()}catch(x){$("le").textContent="Could not reach the server."}});
+$("lo").onclick=async function(){await fetch("/api/admin/logout",{method:"POST"});document.body.classList.remove("in")};
+setInterval(function(){if(document.body.classList.contains("in"))pull().catch(function(){})},30000);
+boot();
+</script></body></html>

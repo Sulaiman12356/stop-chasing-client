@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: stop-chasing-clients
+    runtime: node
+    plan: starter
+    buildCommand: echo ready
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - {key: DATA_FILE, value: /var/data/data.json}
+      - {key: NODE_ENV, value: production}
+      - {key: ADMIN_USER, value: Clarity}
+      - {key: PRICE, value: "5500"}
+      - {key: ADMIN_PASSWORD_HASH, sync: false}
+      - {key: SESSION_SECRET, sync: false}
+      - {key: SITE_URL, sync: false}
+      - {key: META_PIXEL_ID, sync: false}
+      - {key: META_DATASET_ID, sync: false}
+      - {key: META_ACCESS_TOKEN, sync: false}
+      - {key: META_API_VERSION, sync: false}
