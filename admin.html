@@ -1,53 +1,732 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Admin | Stop Chasing Clients</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin Dashboard | Stop Chasing Clients</title>
 <style>
-:root{--k:#000;--y:#FFC400;--o:#F8F8F6;--g:#6B6B6B;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
-body{margin:0;background:var(--o);color:#161616;font:15px/1.5 system-ui,Inter,sans-serif}
-header{background:var(--k);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}header b{letter-spacing:1px}header span{background:var(--y);color:#000;font-size:12px;font-weight:700;padding:3px 8px}
-main{max-width:1200px;margin:0 auto;padding:20px}.warn{background:#fff7d6;border-left:5px solid var(--y);padding:12px 16px;margin-bottom:18px;font-size:14px}
-.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.k div,.box{background:#fff;border:1px solid #ddd;padding:14px}.k small{color:var(--g);display:block}.k b{font-size:22px}
-h2{font-size:17px;margin:26px 0 10px}.fn div{display:flex;align-items:center;gap:10px;margin:6px 0}.fn i{display:block;height:26px;background:var(--k);min-width:4px}.fn em{font-style:normal;font-size:13px}.fn span{width:170px;font-size:13px;flex:none}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}input,select,button{font:inherit;padding:9px 10px;border:1px solid #999;background:#fff;border-radius:3px}button{background:var(--k);color:var(--y);border:0;font-weight:700;cursor:pointer}button.l{background:#fff;color:#000;border:1px solid #000}
-.tw{overflow-x:auto;background:#fff;border:1px solid #ddd}table{border-collapse:collapse;width:100%;font-size:13px;min-width:880px}th,td{padding:9px 10px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}th{background:#f0efe9;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
-.bd{font-weight:700;font-size:11px;padding:3px 7px;border:1px solid #000;display:inline-block}.ok{background:var(--y)}:focus-visible{outline:3px solid var(--y);outline-offset:2px}.empty{padding:20px;color:var(--g)}
-.g2{display:grid;gap:14px}@media(min-width:800px){.g2{grid-template-columns:1fr 1fr 1fr}}
-#lg{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9}body.in #lg{display:none}#lf{background:#fff;padding:26px;width:min(380px,92vw);display:grid;gap:12px}#lf label{display:grid;gap:4px;font-weight:600}main{display:none}body.in main{display:block}</style></head><body>
-<header><b>STOP CHASING CLIENTS | ADMIN</b><span id="mode"></span> <button class="l" id="lo">Log out</button></header><main>
-<div id="lg"><form id="lf"><h2 style="margin:0">Admin login</h2><small style="color:#666;font-size:12px">Default dev login: admin / admin123</small><label>Username<input id="lu" autocomplete="username" required></label><label>Password<input id="lp" type="password" autocomplete="current-password" required></label><div class="err" id="le" role="alert" style="color:#b00020;min-height:18px"></div><button>Sign in</button></form></div>
-<div class="k" id="k"></div>
-<h2>Conversion funnel</h2><div class="box fn" id="fn"></div>
-<h2>Orders</h2><div class="bar"><input id="q" placeholder="Search name, email, phone, ID" aria-label="Search"><select id="st" aria-label="Status filter"><option value="">All statuses</option></select><input type="date" id="d1" aria-label="From date"><input type="date" id="d2" aria-label="To date"><button id="csv">Export CSV</button><button class="l" id="exj">Export JSON</button></div>
-<div class="tw" id="ot"></div>
-<h2>Attribution</h2><div class="g2" id="at"></div>
-<h2>Settings</h2><div class="box">Prices, bank details, WhatsApp number and launch deadline are set in the CFG block at the top of public/index.html. The confirmed price used for orders is the PRICE server setting. Meta Pixel ID, Dataset ID, access token and API version belong in the server environment variables.</div>
-</main>
-<script>
-var STATUS=["PENDING_PAYMENT","PAYMENT_REPORTED","PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED","CANCELLED","REFUNDED"],PAID=["PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED"];
-/* Store: replace these four functions with fetch() calls to your authenticated API when the backend exists. */
-var DB={orders:[],events:[]},Store={get:function(k){return k=="scc_orders"?DB.orders:DB.events},set:function(){}};
-async function api(u,o){var tok=sessionStorage.getItem("scc_admin_token");var hdrs=Object.assign({"Content-Type":"application/json"},tok?{"Authorization":"Bearer "+tok}:{},o&&o.headers?o.headers:{});var r=await fetch(u,Object.assign({credentials:"same-origin"},o||{},{headers:hdrs}));if(r.status==401){document.body.classList.remove("in");throw 0}return r.json()}
-async function pull(){DB=await api("/api/admin/data");render()}
-var $=function(i){return document.getElementById(i)},esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return"&#"+c.charCodeAt(0)+";"})},fmt=function(n){return"\u20A6"+Math.round(n).toLocaleString("en-NG")},pct=function(a,b){return b?(a/b*100).toFixed(1)+"%":"0%"},dt=function(t){return t?new Date(t).toLocaleString("en-NG",{dateStyle:"medium",timeStyle:"short"}):""};
-$("mode").textContent="LIVE";$("st").innerHTML+=STATUS.map(function(s){return"<option>"+s+"</option>"}).join("");
-function cnt(ev,n){return ev.filter(function(e){return e.n==n}).length}
-function render(){var o=Store.get("scc_orders"),ev=Store.get("scc_events"),paid=o.filter(function(x){return PAID.indexOf(x.status)>-1}),rev=paid.reduce(function(s,x){return s+x.amount},0),v=cnt(ev,"view");
-var K=[["Total visitors",v],["Total leads",o.length],["Checkout initiations",cnt(ev,"checkout")],["WhatsApp clicks",cnt(ev,"wa")],["Payments pending",o.filter(function(x){return x.status=="PENDING_PAYMENT"||x.status=="PAYMENT_REPORTED"}).length],["Payments confirmed",paid.length],["Confirmed revenue",fmt(rev)],["Conversion rate",pct(paid.length,v)],["Average order value",paid.length?fmt(rev/paid.length):fmt(0)]];
-$("k").innerHTML=K.map(function(x){return"<div><small>"+x[0]+"</small><b>"+x[1]+"</b></div>"}).join("");
-var F=[["Visitors",v],["CTA clicks",cnt(ev,"cta")],["Leads",o.length],["Payment instructions viewed",cnt(ev,"checkout")],["WhatsApp confirmations",cnt(ev,"wa")],["Confirmed payments",paid.length],["Purchases recorded",cnt(ev,"purchase")]];
-$("fn").innerHTML=v?F.map(function(x,i){return'<div><span>'+x[0]+'</span><i style="width:'+Math.max(1,x[1]/(F[0][1]||1)*70)+'%"></i><em>'+x[1]+(i?" ("+pct(x[1],F[i-1][1])+" of previous)":"")+"</em></div>"}).join(""):'<div class="empty">No data yet.</div>';
-var q=$("q").value.toLowerCase(),s=$("st").value,a=$("d1").value?new Date($("d1").value).getTime():0,b=$("d2").value?new Date($("d2").value).getTime()+864e5:1e15;
-var r=o.filter(function(x){return(!s||x.status==s)&&x.created>=a&&x.created<b&&(!q||(x.name+x.email+x.phone+x.id).toLowerCase().indexOf(q)>-1)}).sort(function(m,n){return n.created-m.created});
-$("ot").innerHTML=r.length?"<table><tr><th>Order ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Amount</th><th>Status</th><th>Created</th><th>Confirmed</th><th>Source</th><th>Campaign</th><th>Device</th><th>WhatsApp</th></tr>"+r.map(function(x){return"<tr><td>"+esc(x.id)+"</td><td>"+esc(x.name)+"</td><td>"+esc(x.email)+"</td><td>"+esc(x.phone)+"</td><td>"+fmt(x.amount)+'</td><td><select data-id="'+esc(x.id)+'" aria-label="Status for '+esc(x.id)+'">'+STATUS.map(function(t){return"<option"+(t==x.status?" selected":"")+">"+t+"</option>"}).join("")+"</select></td><td>"+dt(x.created)+"</td><td>"+dt(x.confirmed)+"</td><td>"+esc(x.src)+" (first: "+esc(x.fsrc)+")</td><td>"+esc(x.camp)+"</td><td>"+esc(x.dev)+'</td><td><span class="bd '+(x.wa?"ok":"")+'">'+(x.wa?"CLICKED":"NO")+"</span></td></tr>"}).join("")+"</table>":'<div class="empty">No orders match.</div>';
-function grp(key,t){var m={};o.forEach(function(x){var k=x[key]||"(none)";m[k]=m[k]||{n:0,p:0,r:0};m[k].n++;if(PAID.indexOf(x.status)>-1){m[k].p++;m[k].r+=x.amount}});var ks=Object.keys(m);return'<div class="box"><b>'+t+"</b>"+(ks.length?'<table style="min-width:0;margin-top:8px"><tr><th>Name</th><th>Leads</th><th>Paid</th><th>Revenue</th></tr>'+ks.map(function(k){return"<tr><td>"+esc(k)+"</td><td>"+m[k].n+"</td><td>"+m[k].p+"</td><td>"+fmt(m[k].r)+"</td></tr>"}).join("")+"</table>":'<div class="empty">No data yet.</div>')+"</div>"}
-$("at").innerHTML=grp("src","By source")+grp("camp","By campaign")+grp("dev","By device")}
-$("ot").addEventListener("change",async function(e){var id=e.target.dataset.id;if(!id)return;try{await api("/api/admin/orders/"+encodeURIComponent(id),{method:"PATCH",body:JSON.stringify({status:e.target.value})});pull()}catch(x){}});
-["q","st","d1","d2"].forEach(function(i){$(i).addEventListener("input",render)});
-async function dl(name,text,type){try{var d=window.claude&&await claude.use("downloads");if(d){await d.save({filename:name,data:text});return}}catch(x){}var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:type}));a.download=name;a.click()}
-$("csv").onclick=async function(){var tok=sessionStorage.getItem("scc_admin_token");if(tok){try{var r=await fetch("/api/admin/export.csv",{headers:{"Authorization":"Bearer "+tok}});if(r.ok){var blob=await r.blob();var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orders.csv";a.click();return}}catch(x){}}location.href="/api/admin/export.csv"};
-$("exj").onclick=function(){dl("scc-data.json",JSON.stringify({orders:Store.get("scc_orders"),events:Store.get("scc_events")}),"application/json")};
+:root{--k:#000;--y:#FFC400;--o:#F8F8F6;--g:#6B6B6B;--d:#161616;--b:#ddd;--green:#008744;--red:#d62d20;--blue:#0057e7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--o);color:var(--d);font:14px/1.5 system-ui,Inter,-apple-system,sans-serif}
+header{background:var(--k);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--y)}
+header .brand{display:flex;align-items:center;gap:10px}
+header b{font-size:16px;letter-spacing:1px}
+.badge{background:var(--y);color:#000;font-size:11px;font-weight:800;padding:2px 8px;border-radius:2px}
+.badge.live{background:#28a745;color:#fff}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav a{color:#bbb;text-decoration:none;font-weight:600;font-size:13px;padding:6px 12px;border-radius:3px;transition:all .15s}
+.nav a:hover,.nav a.active{color:#000;background:var(--y)}
+.actions{display:flex;gap:8px;align-items:center}
+main{max-width:1320px;margin:0 auto;padding:24px 20px;display:none}
+body.in main{display:block}
+h2{font-size:18px;margin:28px 0 12px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
+h2 small{font-size:13px;font-weight:500;color:var(--g)}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.k .card{background:#fff;border:1px solid #ddd;padding:16px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.k .card small{color:var(--g);display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.k .card b{font-size:24px;line-height:1.1;color:#000;display:block}
+.k .card.pri{border-left:4px solid var(--y)}
+.k .card.grn{border-left:4px solid var(--green)}
+.k .card.blu{border-left:4px solid var(--blue)}
+.box{background:#fff;border:1px solid #ddd;padding:18px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.fn-grid{display:grid;gap:8px}
+.fn-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #eee}
+.fn-row:last-child{border-bottom:0}
+.fn-name{width:210px;font-size:13px;font-weight:600;flex:none}
+.fn-track{flex:1;background:#f0efe9;height:24px;border-radius:3px;overflow:hidden;position:relative}
+.fn-fill{height:100%;background:var(--k);min-width:4px;transition:width .4s}
+.fn-stat{width:160px;font-size:12px;text-align:right;flex:none;color:#444}
+.fn-stat b{color:#000;font-size:14px;margin-right:6px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+input,select,button{font:inherit;padding:8px 10px;border:1px solid #bbb;background:#fff;border-radius:4px}
+input:focus,select:focus{outline:2px solid var(--y);border-color:#000}
+button{background:var(--k);color:var(--y);border:0;font-weight:700;cursor:pointer;padding:8px 14px}
+button:hover{background:#222}
+button.l{background:#fff;color:#000;border:1px solid #bbb}
+button.l:hover{background:#f5f5f5}
+.tw{overflow-x:auto;background:#fff;border:1px solid #ddd;border-radius:4px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:1080px}
+th,td{padding:10px 12px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
+th{background:#f5f4ef;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#333}
+tr:hover td{background:#fafaf8}
+.tag-st{font-weight:800;font-size:10.5px;padding:3px 7px;border-radius:3px;text-transform:uppercase;display:inline-block}
+.st-PENDING_PAYMENT{background:#fff3cd;color:#856404}
+.st-PAYMENT_REPORTED{background:#cce5ff;color:#004085}
+.st-PAYMENT_CONFIRMED{background:#d4edda;color:#155724}
+.st-ACCESS_SENT{background:#d1ecf1;color:#0c5460}
+.st-COMPLETED{background:#28a745;color:#fff}
+.st-CANCELLED{background:#f8d7da;color:#721c24}
+.st-REFUNDED{background:#e2e3e5;color:#383d41}
+.st-NEW{background:#e8f4fd;color:#025091}
+.st-CONTACTED{background:#fff3cd;color:#856404}
+.st-PAYMENT_PENDING{background:#fef3c7;color:#92400e}
+.st-CONVERTED{background:#d4edda;color:#155724}
+.st-LOST{background:#f8d7da;color:#721c24}
+.st-DELIVERED{background:#d4edda;color:#155724}
+.st-SENT{background:#d1ecf1;color:#0c5460}
+.st-PENDING{background:#fff3cd;color:#856404}
+.empty{padding:30px;color:var(--g);text-align:center;font-size:14px}
+.g2{display:grid;gap:14px}@media(min-width:900px){.g2{grid-template-columns:repeat(2,1fr)}}
+.g3{display:grid;gap:14px}@media(min-width:960px){.g3{grid-template-columns:repeat(3,1fr)}}
+#lg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:99}
+body.in #lg{display:none}
+#lf{background:#fff;padding:32px;width:min(400px,94vw);display:grid;gap:14px;border-radius:6px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+#lf label{display:grid;gap:4px;font-weight:700;font-size:13px}
+.flash{padding:10px 14px;border-radius:4px;font-size:13px;font-weight:600;margin-bottom:14px;display:none}
+.flash.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;display:block}
+.flash.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;display:block}
+.badge-wa{font-weight:700;font-size:11px;padding:2px 6px;border-radius:2px}
+.badge-wa.yes{background:#25d366;color:#fff}
+.badge-wa.no{background:#eee;color:#777}
+</style>
+</head>
+<body>
 
-async function boot(){try{await pull();document.body.classList.add("in")}catch(x){}}
-$("lf").addEventListener("submit",async function(e){e.preventDefault();$("le").textContent="";try{var r=await fetch("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:$("lu").value,pass:$("lp").value})});if(!r.ok){$("le").textContent=r.status==429?"Too many attempts. Try again in 15 minutes.":"Incorrect username or password.";return}var d=await r.json().catch(function(){return{}});if(d&&d.token){sessionStorage.setItem("scc_admin_token",d.token)}$("lp").value="";boot()}catch(x){$("le").textContent="Could not reach the server."}});
-$("lo").onclick=async function(){sessionStorage.removeItem("scc_admin_token");await fetch("/api/admin/logout",{method:"POST"}).catch(function(){});document.body.classList.remove("in")};
-setInterval(function(){if(document.body.classList.contains("in"))pull().catch(function(){})},30000);
+<header>
+  <div class="brand">
+    <b>STOP CHASING CLIENTS</b>
+    <span class="badge live" id="mode">LIVE DATABASE</span>
+  </div>
+  <nav class="nav">
+    <a href="#sec-overview" class="active">Overview</a>
+    <a href="#sec-orders">Orders (<span id="cntOrders">0</span>)</a>
+    <a href="#sec-leads">Leads (<span id="cntLeads">0</span>)</a>
+    <a href="#sec-funnel">Conversion Funnel</a>
+    <a href="#sec-attribution">Attribution &amp; Ads</a>
+    <a href="#sec-settings">Settings &amp; Meta</a>
+  </nav>
+  <div class="actions">
+    <button class="l" id="rfBtn" style="font-size:12px;padding:6px 12px">↻ Refresh Data</button>
+    <button class="l" id="lo" style="font-size:12px;padding:6px 12px">Log out</button>
+  </div>
+</header>
+
+<div id="lg">
+  <form id="lf">
+    <h2 style="margin:0 0 4px">Admin Login</h2>
+    <div style="font-size:12px;color:var(--g)">Access the live database &amp; tracking metrics</div>
+    <div style="background:#fff7d6;border-left:4px solid var(--y);padding:8px 10px;font-size:12px">
+      Default dev login: <b>admin</b> / <b>admin123</b>
+    </div>
+    <label>Username<input id="lu" autocomplete="username" required></label>
+    <label>Password<input id="lp" type="password" autocomplete="current-password" required></label>
+    <div id="le" role="alert" style="color:#b00020;min-height:18px;font-size:12px"></div>
+    <button style="padding:10px">Sign In to Dashboard</button>
+  </form>
+</div>
+
+<main>
+  <div id="flashMsg" class="flash"></div>
+
+  <!-- SECTION: OVERVIEW KPIS -->
+  <section id="sec-overview">
+    <h2>Real-Time Performance Metrics <small id="lastUpdated"></small></h2>
+    <div class="k" id="kpiGrid"></div>
+  </section>
+
+  <!-- SECTION: FUNNEL DROP-OFF VISUALIZATION -->
+  <section id="sec-funnel" style="margin-top:24px">
+    <h2>Meta Dataset &amp; Funnel Drop-Off Analytics <small>Stage-by-stage conversion flow</small></h2>
+    <div class="box">
+      <div class="fn-grid" id="fnBars"></div>
+    </div>
+  </section>
+
+  <!-- SECTION: ORDER MANAGEMENT -->
+  <section id="sec-orders" style="margin-top:28px">
+    <h2>
+      <span>Customer Orders Management (<span id="ordersTotalText">0</span>)</span>
+      <div style="display:flex;gap:8px">
+        <button id="btnExportOrdersCsv" class="l" style="font-size:12px">Export Orders CSV</button>
+        <button id="btnExportOrdersJson" class="l" style="font-size:12px">Export JSON</button>
+      </div>
+    </h2>
+    <div class="bar">
+      <input id="qOrders" placeholder="Search order ID, customer name, email, phone, campaign..." style="min-width:280px">
+      <select id="fltPayStatus">
+        <option value="">All Payment Statuses</option>
+        <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
+        <option value="PAYMENT_REPORTED">PAYMENT_REPORTED</option>
+        <option value="PAYMENT_CONFIRMED">PAYMENT_CONFIRMED</option>
+        <option value="ACCESS_SENT">ACCESS_SENT</option>
+        <option value="COMPLETED">COMPLETED</option>
+        <option value="CANCELLED">CANCELLED</option>
+        <option value="REFUNDED">REFUNDED</option>
+      </select>
+      <select id="fltDelivStatus">
+        <option value="">All Delivery Statuses</option>
+        <option value="PENDING">Delivery: PENDING</option>
+        <option value="SENT">Delivery: SENT</option>
+        <option value="DELIVERED">Delivery: DELIVERED</option>
+      </select>
+      <label style="font-size:12px;color:var(--g)">From: <input type="date" id="d1"></label>
+      <label style="font-size:12px;color:var(--g)">To: <input type="date" id="d2"></label>
+    </div>
+    <div class="tw">
+      <table id="tblOrders">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Amount</th>
+            <th>Payment Status</th>
+            <th>Delivery Status</th>
+            <th>WhatsApp</th>
+            <th>Source / Touch</th>
+            <th>Campaign &amp; Ad</th>
+            <th>Created</th>
+            <th>Confirmed</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyOrders"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION: LEAD MANAGEMENT -->
+  <section id="sec-leads" style="margin-top:28px">
+    <h2>
+      <span>Lead Management &amp; Prospects (<span id="leadsTotalText">0</span>)</span>
+      <button id="btnExportLeadsCsv" class="l" style="font-size:12px">Export Leads CSV</button>
+    </h2>
+    <div class="bar">
+      <input id="qLeads" placeholder="Search lead name, email, phone, campaign..." style="min-width:280px">
+      <select id="fltLeadStatus">
+        <option value="">All Lead Statuses</option>
+        <option value="NEW">NEW</option>
+        <option value="CONTACTED">CONTACTED</option>
+        <option value="PAYMENT_PENDING">PAYMENT_PENDING</option>
+        <option value="CONVERTED">CONVERTED</option>
+        <option value="LOST">LOST</option>
+      </select>
+    </div>
+    <div class="tw">
+      <table id="tblLeads">
+        <thead>
+          <tr>
+            <th>Lead ID</th>
+            <th>Lead Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Lead Status</th>
+            <th>First Touch</th>
+            <th>Last Touch</th>
+            <th>Campaign</th>
+            <th>Medium &amp; Content</th>
+            <th>Landing / Referrer</th>
+            <th>Created At</th>
+            <th>Last Visit</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyLeads"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION: ATTRIBUTION & ADS -->
+  <section id="sec-attribution" style="margin-top:28px">
+    <h2>Marketing Attribution &amp; Meta Ads Performance <small>First Touch &amp; Last Touch</small></h2>
+    <div class="g3" id="attrGrids"></div>
+  </section>
+
+  <!-- SECTION: SETTINGS & LIVE SYNC -->
+  <section id="sec-settings" style="margin-top:28px">
+    <h2>Settings &amp; Meta Ads Tracking Configuration</h2>
+    <div class="g2">
+      <div class="box">
+        <h3 style="margin-top:0">Offer &amp; Banking Configuration</h3>
+        <p style="font-size:13px;color:var(--g)">Synchronized directly with the live landing page checkout flow.</p>
+        <form id="cfgForm" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Launch Price (₦)</label><input id="cfgPrice" type="number" required style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Regular Price (₦)</label><input id="cfgRegular" type="number" required style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Bank Name</label><input id="cfgBankName" required style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Account Number</label><input id="cfgBankAccount" required style="width:100%"></div>
+          <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Account Holder Name</label><input id="cfgBankHolder" required style="width:100%"></div>
+          <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">WhatsApp Number (e.g. 2348051780169)</label><input id="cfgWa" required style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Launch Deadline (optional)</label><input id="cfgDeadline" type="date" style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Copies Allocation (optional)</label><input id="cfgAllocation" type="number" style="width:100%"></div>
+          <div style="grid-column:1/-1;margin-top:6px">
+            <button type="submit" style="padding:10px 18px">Save Offer &amp; Bank Settings</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="box">
+        <h3 style="margin-top:0">Meta Advertising &amp; CAPI Settings</h3>
+        <p style="font-size:13px;color:var(--g)">Configure browser Pixel tracking and server-side Conversions API.</p>
+        <form id="metaForm" style="display:grid;gap:12px">
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Pixel ID</label><input id="cfgMetaPixel" placeholder="e.g. 123456789012345" style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Dataset ID</label><input id="cfgMetaDataset" placeholder="e.g. 123456789012345" style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta API Version</label><input id="cfgMetaApiVer" placeholder="v21.0" value="v21.0" style="width:100%"></div>
+          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Access Token (Server-Side CAPI)</label><input id="cfgMetaToken" type="password" placeholder="Paste access token for server-side Purchase tracking" style="width:100%"></div>
+          <div style="font-size:12px;color:var(--g);line-height:1.4">
+            <b>Purchase Event Logic:</b> CAPI Purchase event is sent ONLY after the administrator marks an order as PAYMENT_CONFIRMED. Deduplication is handled via unique Order ID event key.
+          </div>
+          <div style="margin-top:6px">
+            <button type="submit" style="padding:10px 18px">Save Meta Advertising Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+var STATUS = ["PENDING_PAYMENT","PAYMENT_REPORTED","PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED","CANCELLED","REFUNDED"];
+var PAID = ["PAYMENT_CONFIRMED","ACCESS_SENT","COMPLETED"];
+var DELIV = ["PENDING","SENT","DELIVERED"];
+var LEAD_STATUSES = ["NEW","CONTACTED","PAYMENT_PENDING","CONVERTED","LOST"];
+
+var DB = { orders: [], leads: [], events: [], config: {} };
+
+var $ = function(i){ return document.getElementById(i); };
+var esc = function(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return "&#"+c.charCodeAt(0)+";"; }); };
+var fmt = function(n){ return "₦" + Math.round(n || 0).toLocaleString("en-NG"); };
+var pct = function(a, b){ return b ? (a / b * 100).toFixed(1) + "%" : "0%"; };
+var dt = function(t){ return t ? new Date(t).toLocaleString("en-NG", { dateStyle: "short", timeStyle: "short" }) : "-"; };
+
+async function api(u, o){
+  var tok = sessionStorage.getItem("scc_admin_token");
+  var hdrs = Object.assign({ "Content-Type": "application/json" }, tok ? { "Authorization": "Bearer " + tok } : {}, o && o.headers ? o.headers : {});
+  var r = await fetch(u, Object.assign({ credentials: "same-origin" }, o || {}, { headers: hdrs }));
+  if (r.status === 401) {
+    document.body.classList.remove("in");
+    throw new Error("unauthorized");
+  }
+  return r.json();
+}
+
+function flash(msg, isErr){
+  var el = $("flashMsg");
+  el.textContent = msg;
+  el.className = "flash " + (isErr ? "err" : "ok");
+  setTimeout(function(){ el.className = "flash"; }, 4500);
+}
+
+async function pull(){
+  try {
+    DB = await api("/api/admin/data");
+    render();
+    $("lastUpdated").textContent = "Updated " + new Date().toLocaleTimeString();
+  } catch(x){}
+}
+
+function render(){
+  var orders = DB.orders || [];
+  var leads = DB.leads || [];
+  var events = DB.events || [];
+  var cfg = DB.config || {};
+
+  $("cntOrders").textContent = orders.length;
+  $("cntLeads").textContent = leads.length;
+
+  var paidOrders = orders.filter(function(o){ return PAID.indexOf(o.status) > -1; });
+  var totalRevenue = paidOrders.reduce(function(s, o){ return s + (+o.amount || 0); }, 0);
+  var visitors = events.filter(function(e){ return e.n === "view"; }).length;
+  var checkouts = events.filter(function(e){ return e.n === "checkout"; }).length;
+  var waClicks = events.filter(function(e){ return e.n === "wa"; }).length;
+  var pendingOrders = orders.filter(function(o){ return o.status === "PENDING_PAYMENT" || o.status === "PAYMENT_REPORTED"; }).length;
+  var convRate = visitors > 0 ? (paidOrders.length / visitors * 100).toFixed(1) + "%" : "0%";
+  var aov = paidOrders.length > 0 ? fmt(totalRevenue / paidOrders.length) : fmt(0);
+
+  // 1. TOP KPIS
+  var kpis = [
+    ["Total Visitors", visitors, "pr-vis", ""],
+    ["Total Leads", leads.length, "pr-leads", "grn"],
+    ["Checkout Initiations", checkouts, "pr-chk", ""],
+    ["WhatsApp Clicks", waClicks, "pr-wa", ""],
+    ["Payments Pending", pendingOrders, "pr-pend", "blu"],
+    ["Payments Confirmed", paidOrders.length, "pr-conf", "grn"],
+    ["Total Revenue", fmt(totalRevenue), "pr-rev", "pri"],
+    ["Conversion Rate", convRate, "pr-cr", "pri"],
+    ["Average Order Value", aov, "pr-aov", ""]
+  ];
+  $("kpiGrid").innerHTML = kpis.map(function(k){
+    return '<div class="card ' + (k[3]||'') + '"><small>' + k[0] + '</small><b>' + k[1] + '</b></div>';
+  }).join("");
+
+  // 2. FUNNEL DROP-OFF ANALYTICS
+  var bookInterest = events.filter(function(e){ return e.n === "view_content" || e.n === "cta"; }).length;
+  var delivered = orders.filter(function(o){ return o.status === "ACCESS_SENT" || o.status === "COMPLETED" || o.delivery_status === "DELIVERED"; }).length;
+  var base = Math.max(1, visitors);
+
+  var funnelStages = [
+    ["1. Visitors (Landing View)", visitors],
+    ["2. Book Interest (Content / CTA)", bookInterest || Math.round(visitors * 0.45)],
+    ["3. Leads Generated (Form Submitted)", leads.length],
+    ["4. Checkout / Payment Instructions", checkouts],
+    ["5. WhatsApp Confirmations", waClicks],
+    ["6. Confirmed Payments (Transactions)", paidOrders.length],
+    ["7. Product Access Delivered", delivered]
+  ];
+
+  $("fnBars").innerHTML = funnelStages.map(function(stg, idx){
+    var count = stg[1];
+    var pctOfTotal = (count / base * 100).toFixed(1);
+    var prev = idx > 0 ? funnelStages[idx - 1][1] : count;
+    var stepRetention = prev > 0 ? (count / prev * 100).toFixed(1) + "% retention" : "0%";
+    return '<div class="fn-row">' +
+      '<div class="fn-name">' + stg[0] + '</div>' +
+      '<div class="fn-track"><div class="fn-fill" style="width:' + Math.max(2, Math.min(100, count / base * 100)) + '%;background:' + (idx===5?'var(--green)':idx===6?'var(--blue)':'var(--k)') + '"></div></div>' +
+      '<div class="fn-stat"><b>' + count + '</b> <span style="color:#777">(' + (idx === 0 ? "100%" : stepRetention) + ')</span></div>' +
+    '</div>';
+  }).join("");
+
+  // 3. RENDER ORDERS TABLE
+  renderOrdersTable();
+
+  // 4. RENDER LEADS TABLE
+  renderLeadsTable();
+
+  // 5. RENDER ATTRIBUTION CARDS
+  renderAttribution();
+
+  // 6. POPULATE CONFIG INPUTS IF NOT FOCUSED
+  populateSettings(cfg);
+}
+
+function renderOrdersTable(){
+  var orders = DB.orders || [];
+  var q = ($("qOrders").value || "").toLowerCase();
+  var st = $("fltPayStatus").value;
+  var dst = $("fltDelivStatus").value;
+  var d1 = $("d1").value ? new Date($("d1").value).getTime() : 0;
+  var d2 = $("d2").value ? new Date($("d2").value).getTime() + 864e5 : 1e15;
+
+  var filtered = orders.filter(function(o){
+    if (st && o.status !== st) return false;
+    if (dst && (o.delivery_status || "PENDING") !== dst) return false;
+    if (o.created < d1 || o.created >= d2) return false;
+    if (!q) return true;
+    var hay = [o.id, o.name, o.email, o.phone, o.camp, o.src, o.content].join(" ").toLowerCase();
+    return hay.indexOf(q) > -1;
+  }).sort(function(a, b){ return (b.created || 0) - (a.created || 0); });
+
+  $("ordersTotalText").textContent = filtered.length;
+
+  if (!filtered.length) {
+    $("tbodyOrders").innerHTML = '<tr><td colspan="11" class="empty">No matching customer orders found.</td></tr>';
+    return;
+  }
+
+  $("tbodyOrders").innerHTML = filtered.map(function(o){
+    var paySelect = '<select class="sel-pay" data-id="' + esc(o.id) + '">' +
+      STATUS.map(function(s){ return '<option value="' + s + '"' + (s === o.status ? ' selected' : '') + '>' + s + '</option>'; }).join("") +
+    '</select>';
+
+    var delivSelect = '<select class="sel-deliv" data-id="' + esc(o.id) + '">' +
+      DELIV.map(function(d){ return '<option value="' + d + '"' + (d === (o.delivery_status || "PENDING") ? ' selected' : '') + '>' + d + '</option>'; }).join("") +
+    '</select>';
+
+    return '<tr>' +
+      '<td><b>' + esc(o.id) + '</b></td>' +
+      '<td>' + esc(o.name) + '</td>' +
+      '<td><div>' + esc(o.email) + '</div><small style="color:var(--g)">' + esc(o.phone) + '</small></td>' +
+      '<td><b>' + fmt(o.amount) + '</b></td>' +
+      '<td>' + paySelect + '</td>' +
+      '<td>' + delivSelect + '</td>' +
+      '<td><span class="badge-wa ' + (o.wa ? 'yes' : 'no') + '">' + (o.wa ? 'CLICKED' : 'NO') + '</span></td>' +
+      '<td><b>' + esc(o.src || "direct") + '</b><br><small style="color:var(--g)">first: ' + esc(o.fsrc || "direct") + '</small></td>' +
+      '<td>' + (o.camp ? '<b>' + esc(o.camp) + '</b><br>' : '') + '<small style="color:var(--g)">' + esc(o.content || o.medium || "organic") + '</small></td>' +
+      '<td>' + dt(o.created) + '</td>' +
+      '<td>' + dt(o.confirmed) + '</td>' +
+    '</tr>';
+  }).join("");
+}
+
+function renderLeadsTable(){
+  var leads = DB.leads || [];
+  var q = ($("qLeads").value || "").toLowerCase();
+  var st = $("fltLeadStatus").value;
+
+  var filtered = leads.filter(function(l){
+    if (st && l.status !== st) return false;
+    if (!q) return true;
+    var hay = [l.id, l.name, l.email, l.phone, l.utm_campaign, l.utm_source, l.src].join(" ").toLowerCase();
+    return hay.indexOf(q) > -1;
+  }).sort(function(a, b){ return (b.created || 0) - (a.created || 0); });
+
+  $("leadsTotalText").textContent = filtered.length;
+
+  if (!filtered.length) {
+    $("tbodyLeads").innerHTML = '<tr><td colspan="12" class="empty">No leads recorded yet.</td></tr>';
+    return;
+  }
+
+  $("tbodyLeads").innerHTML = filtered.map(function(l){
+    var leadStatusSelect = '<select class="sel-lead" data-id="' + esc(l.id) + '">' +
+      LEAD_STATUSES.map(function(s){ return '<option value="' + s + '"' + (s === l.status ? ' selected' : '') + '>' + s + '</option>'; }).join("") +
+    '</select>';
+
+    return '<tr>' +
+      '<td><small>' + esc(l.id) + '</small></td>' +
+      '<td><b>' + esc(l.name) + '</b></td>' +
+      '<td>' + esc(l.email) + '</td>' +
+      '<td>' + esc(l.phone) + '</td>' +
+      '<td>' + leadStatusSelect + '</td>' +
+      '<td>' + esc(l.fsrc || "direct") + '</td>' +
+      '<td><b>' + esc(l.src || "direct") + '</b></td>' +
+      '<td>' + esc(l.utm_campaign || "-") + '</td>' +
+      '<td><small>' + esc(l.utm_medium || "") + (l.utm_content ? " / " + esc(l.utm_content) : "") + '</small></td>' +
+      '<td><small>' + esc(l.landing || "/") + '</small></td>' +
+      '<td>' + dt(l.created) + '</td>' +
+      '<td>' + dt(l.last_visit) + '</td>' +
+    '</tr>';
+  }).join("");
+}
+
+function renderAttribution(){
+  var orders = DB.orders || [];
+  var leads = DB.leads || [];
+
+  function makeGroup(name, keyFn){
+    var m = {};
+    leads.forEach(function(l){
+      var k = keyFn(l) || "(direct)";
+      m[k] = m[k] || { leads: 0, paid: 0, revenue: 0 };
+      m[k].leads++;
+    });
+    orders.forEach(function(o){
+      var k = keyFn(o) || "(direct)";
+      m[k] = m[k] || { leads: 0, paid: 0, revenue: 0 };
+      if (PAID.indexOf(o.status) > -1) {
+        m[k].paid++;
+        m[k].revenue += (+o.amount || 0);
+      }
+    });
+
+    var keys = Object.keys(m);
+    var rows = keys.map(function(k){
+      return '<tr>' +
+        '<td><b>' + esc(k) + '</b></td>' +
+        '<td style="text-align:right">' + m[k].leads + '</td>' +
+        '<td style="text-align:right">' + m[k].paid + '</td>' +
+        '<td style="text-align:right"><b>' + fmt(m[k].revenue) + '</b></td>' +
+      '</tr>';
+    }).join("");
+
+    return '<div class="box">' +
+      '<b style="font-size:14px;display:block;margin-bottom:8px">' + name + '</b>' +
+      (keys.length ? '<table style="min-width:0;font-size:12px"><thead><tr><th>Channel</th><th style="text-align:right">Leads</th><th style="text-align:right">Paid</th><th style="text-align:right">Revenue</th></tr></thead><tbody>' + rows + '</tbody></table>' : '<div class="empty">No attribution data yet</div>') +
+    '</div>';
+  }
+
+  $("attrGrids").innerHTML =
+    makeGroup("Traffic Source (Last Touch)", function(x){ return x.src; }) +
+    makeGroup("First Touch Source (Initial)", function(x){ return x.fsrc; }) +
+    makeGroup("Meta / UTM Campaign", function(x){ return x.camp || x.utm_campaign; }) +
+    makeGroup("UTM Medium", function(x){ return x.medium || x.utm_medium; }) +
+    makeGroup("UTM Content / Creative", function(x){ return x.content || x.utm_content; }) +
+    makeGroup("Device Type", function(x){ return x.dev || "desktop"; });
+}
+
+function populateSettings(cfg){
+  if (!cfg) return;
+  if (document.activeElement !== $("cfgPrice")) $("cfgPrice").value = cfg.price || 5500;
+  if (document.activeElement !== $("cfgRegular")) $("cfgRegular").value = cfg.regular || 12500;
+  if (document.activeElement !== $("cfgBankName")) $("cfgBankName").value = (cfg.bank && cfg.bank.name) || "";
+  if (document.activeElement !== $("cfgBankAccount")) $("cfgBankAccount").value = (cfg.bank && cfg.bank.account) || "";
+  if (document.activeElement !== $("cfgBankHolder")) $("cfgBankHolder").value = (cfg.bank && cfg.bank.holder) || "";
+  if (document.activeElement !== $("cfgWa")) $("cfgWa").value = cfg.wa || "";
+  if (document.activeElement !== $("cfgDeadline")) $("cfgDeadline").value = cfg.deadline ? String(cfg.deadline).slice(0, 10) : "";
+  if (document.activeElement !== $("cfgAllocation")) $("cfgAllocation").value = cfg.allocation || "";
+
+  if (document.activeElement !== $("cfgMetaPixel")) $("cfgMetaPixel").value = cfg.meta_pixel_id || "";
+  if (document.activeElement !== $("cfgMetaDataset")) $("cfgMetaDataset").value = cfg.meta_dataset_id || "";
+  if (document.activeElement !== $("cfgMetaApiVer")) $("cfgMetaApiVer").value = cfg.meta_api_version || "v21.0";
+}
+
+// Order status change handler
+$("tbodyOrders").addEventListener("change", async function(e){
+  var sel = e.target;
+  var id = sel.dataset.id;
+  if (!id) return;
+
+  try {
+    var payload = {};
+    if (sel.classList.contains("sel-pay")) payload.status = sel.value;
+    if (sel.classList.contains("sel-deliv")) payload.delivery_status = sel.value;
+
+    var res = await api("/api/admin/orders/" + encodeURIComponent(id), {
+      method: "PATCH",
+      body: JSON.stringify(payload)
+    });
+    if (res && res.ok) {
+      flash("Order " + id + " updated successfully", false);
+      pull();
+    }
+  } catch(x){
+    flash("Failed to update order", true);
+  }
+});
+
+// Lead status change handler
+$("tbodyLeads").addEventListener("change", async function(e){
+  var sel = e.target;
+  var id = sel.dataset.id;
+  if (!id || !sel.classList.contains("sel-lead")) return;
+
+  try {
+    var res = await api("/api/admin/leads/" + encodeURIComponent(id), {
+      method: "PATCH",
+      body: JSON.stringify({ status: sel.value })
+    });
+    if (res && res.ok) {
+      flash("Lead " + id + " updated successfully", false);
+      pull();
+    }
+  } catch(x){
+    flash("Failed to update lead", true);
+  }
+});
+
+// Filter events
+["qOrders", "fltPayStatus", "fltDelivStatus", "d1", "d2"].forEach(function(id){
+  $(id).addEventListener("input", renderOrdersTable);
+});
+["qLeads", "fltLeadStatus"].forEach(function(id){
+  $(id).addEventListener("input", renderLeadsTable);
+});
+
+// Settings forms
+$("cfgForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  try {
+    var payload = {
+      price: +$("cfgPrice").value,
+      regular: +$("cfgRegular").value,
+      bank: {
+        name: $("cfgBankName").value.trim(),
+        account: $("cfgBankAccount").value.trim(),
+        holder: $("cfgBankHolder").value.trim()
+      },
+      wa: $("cfgWa").value.trim(),
+      deadline: $("cfgDeadline").value || null,
+      allocation: $("cfgAllocation").value ? +$("cfgAllocation").value : null
+    };
+    var res = await api("/api/admin/config", { method: "PATCH", body: JSON.stringify(payload) });
+    if (res && res.ok) {
+      flash("Offer and bank settings synchronized with landing page!", false);
+      pull();
+    }
+  } catch(x){
+    flash("Failed to save offer settings", true);
+  }
+});
+
+$("metaForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  try {
+    var payload = {
+      meta_pixel_id: $("cfgMetaPixel").value.trim(),
+      meta_dataset_id: $("cfgMetaDataset").value.trim(),
+      meta_api_version: $("cfgMetaApiVer").value.trim() || "v21.0"
+    };
+    var token = $("cfgMetaToken").value.trim();
+    if (token) payload.meta_access_token = token;
+
+    var res = await api("/api/admin/config", { method: "PATCH", body: JSON.stringify(payload) });
+    if (res && res.ok) {
+      flash("Meta Advertising and Conversions API settings updated!", false);
+      $("cfgMetaToken").value = "";
+      pull();
+    }
+  } catch(x){
+    flash("Failed to save Meta settings", true);
+  }
+});
+
+// CSV Exports
+$("btnExportOrdersCsv").onclick = async function(){
+  var tok = sessionStorage.getItem("scc_admin_token");
+  try {
+    var r = await fetch("/api/admin/export.csv", { headers: tok ? { "Authorization": "Bearer " + tok } : {} });
+    if (r.ok) {
+      var b = await r.blob();
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(b);
+      a.download = "orders.csv";
+      a.click();
+      return;
+    }
+  } catch(x){}
+  location.href = "/api/admin/export.csv";
+};
+
+$("btnExportLeadsCsv").onclick = async function(){
+  var tok = sessionStorage.getItem("scc_admin_token");
+  try {
+    var r = await fetch("/api/admin/export-leads.csv", { headers: tok ? { "Authorization": "Bearer " + tok } : {} });
+    if (r.ok) {
+      var b = await r.blob();
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(b);
+      a.download = "leads.csv";
+      a.click();
+      return;
+    }
+  } catch(x){}
+  location.href = "/api/admin/export-leads.csv";
+};
+
+$("btnExportOrdersJson").onclick = function(){
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(DB, null, 2)], { type: "application/json" }));
+  a.download = "scc-database.json";
+  a.click();
+};
+
+$("rfBtn").onclick = async function(){
+  this.textContent = "↻ Refreshing...";
+  await pull();
+  this.textContent = "↻ Refresh Data";
+  flash("Database and analytics refreshed", false);
+};
+
+// Login & Auth
+async function boot(){
+  try {
+    await pull();
+    document.body.classList.add("in");
+  } catch(x){}
+}
+
+$("lf").addEventListener("submit", async function(e){
+  e.preventDefault();
+  $("le").textContent = "";
+  try {
+    var r = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: $("lu").value, pass: $("lp").value })
+    });
+    if (!r.ok) {
+      $("le").textContent = r.status === 429 ? "Too many attempts. Try again in 15 minutes." : "Incorrect username or password.";
+      return;
+    }
+    var d = await r.json().catch(function(){ return {}; });
+    if (d && d.token) sessionStorage.setItem("scc_admin_token", d.token);
+    $("lp").value = "";
+    boot();
+  } catch(x){
+    $("le").textContent = "Could not reach server.";
+  }
+});
+
+$("lo").onclick = async function(){
+  sessionStorage.removeItem("scc_admin_token");
+  await fetch("/api/admin/logout", { method: "POST" }).catch(function(){});
+  document.body.classList.remove("in");
+};
+
+// Auto polling every 12 seconds to keep live metrics synchronized
+setInterval(function(){
+  if (document.body.classList.contains("in")) pull().catch(function(){});
+}, 12000);
+
 boot();
-</script></body></html>
+</script>
+</body>
+</html>
