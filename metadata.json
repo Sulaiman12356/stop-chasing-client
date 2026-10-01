@@ -1,0 +1,8 @@
+{
+  "name": "Stop Chasing Clients",
+  "description": "Sales landing page and order management admin dashboard for STOP CHASING CLIENTS by Onifade Sulaiman (Mr. Clarity).",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

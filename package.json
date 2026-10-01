@@ -1,1 +1,13 @@
-{"name":"stop-chasing-clients","version":"1.0.0","private":true,"scripts":{"start":"node server.js"},"engines":{"node":">=18"}}
+{
+  "name": "stop-chasing-clients",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Ready'"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
