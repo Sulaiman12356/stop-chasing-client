@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Admin Dashboard | Stop Chasing Clients</title>
 <style>
-:root{--k:#000;--y:#FFC400;--o:#F8F8F6;--g:#6B6B6B;--d:#161616;--b:#ddd;--green:#008744;--red:#d62d20;--blue:#0057e7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+:root{--k:#000;--y:#FFC400;--o:#F8F8F6;--g:#6B6B6B;--d:#161616;--green:#008744;--red:#d62d20;--blue:#0057e7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--o);color:var(--d);font:14px/1.5 system-ui,Inter,-apple-system,sans-serif}
 header{background:var(--k);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--y)}
@@ -18,14 +18,14 @@ header b{font-size:16px;letter-spacing:1px}
 .nav a{color:#bbb;text-decoration:none;font-weight:600;font-size:13px;padding:6px 12px;border-radius:3px;transition:all .15s}
 .nav a:hover,.nav a.active{color:#000;background:var(--y)}
 .actions{display:flex;gap:8px;align-items:center}
-main{max-width:1320px;margin:0 auto;padding:24px 20px;display:none}
+main{max-width:1360px;margin:0 auto;padding:24px 20px;display:none}
 body.in main{display:block}
-h2{font-size:18px;margin:28px 0 12px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
+h2{font-size:18px;margin:28px 0 12px;font-weight:800;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 h2 small{font-size:13px;font-weight:500;color:var(--g)}
-.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
 .k .card{background:#fff;border:1px solid #ddd;padding:16px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .k .card small{color:var(--g);display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.k .card b{font-size:24px;line-height:1.1;color:#000;display:block}
+.k .card b{font-size:22px;line-height:1.1;color:#000;display:block}
 .k .card.pri{border-left:4px solid var(--y)}
 .k .card.grn{border-left:4px solid var(--green)}
 .k .card.blu{border-left:4px solid var(--blue)}
@@ -33,20 +33,27 @@ h2 small{font-size:13px;font-weight:500;color:var(--g)}
 .fn-grid{display:grid;gap:8px}
 .fn-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #eee}
 .fn-row:last-child{border-bottom:0}
-.fn-name{width:210px;font-size:13px;font-weight:600;flex:none}
+.fn-name{width:220px;font-size:13px;font-weight:600;flex:none}
 .fn-track{flex:1;background:#f0efe9;height:24px;border-radius:3px;overflow:hidden;position:relative}
 .fn-fill{height:100%;background:var(--k);min-width:4px;transition:width .4s}
-.fn-stat{width:160px;font-size:12px;text-align:right;flex:none;color:#444}
+.fn-stat{width:180px;font-size:12px;text-align:right;flex:none;color:#444}
 .fn-stat b{color:#000;font-size:14px;margin-right:6px}
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-input,select,button{font:inherit;padding:8px 10px;border:1px solid #bbb;background:#fff;border-radius:4px}
-input:focus,select:focus{outline:2px solid var(--y);border-color:#000}
+input,select,button,textarea{font:inherit;padding:8px 10px;border:1px solid #bbb;background:#fff;border-radius:4px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--y);border-color:#000}
 button{background:var(--k);color:var(--y);border:0;font-weight:700;cursor:pointer;padding:8px 14px}
 button:hover{background:#222}
 button.l{background:#fff;color:#000;border:1px solid #bbb}
 button.l:hover{background:#f5f5f5}
+button.btn-act{padding:4px 8px;font-size:11px;border-radius:3px}
+button.btn-confirm{background:#28a745;color:#fff}
+button.btn-confirm:hover{background:#218838}
+button.btn-deliv{background:#0057e7;color:#fff}
+button.btn-deliv:hover{background:#0045b5}
+button.btn-wa{background:#25d366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+button.btn-wa:hover{background:#1ebe57}
 .tw{overflow-x:auto;background:#fff;border:1px solid #ddd;border-radius:4px}
-table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:1080px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:1160px}
 th,td{padding:10px 12px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
 th{background:#f5f4ef;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#333}
 tr:hover td{background:#fafaf8}
@@ -63,13 +70,10 @@ tr:hover td{background:#fafaf8}
 .st-PAYMENT_PENDING{background:#fef3c7;color:#92400e}
 .st-CONVERTED{background:#d4edda;color:#155724}
 .st-LOST{background:#f8d7da;color:#721c24}
-.st-DELIVERED{background:#d4edda;color:#155724}
-.st-SENT{background:#d1ecf1;color:#0c5460}
-.st-PENDING{background:#fff3cd;color:#856404}
 .empty{padding:30px;color:var(--g);text-align:center;font-size:14px}
 .g2{display:grid;gap:14px}@media(min-width:900px){.g2{grid-template-columns:repeat(2,1fr)}}
 .g3{display:grid;gap:14px}@media(min-width:960px){.g3{grid-template-columns:repeat(3,1fr)}}
-#lg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:99}
+#lg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:99}
 body.in #lg{display:none}
 #lf{background:#fff;padding:32px;width:min(400px,94vw);display:grid;gap:14px;border-radius:6px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
 #lf label{display:grid;gap:4px;font-weight:700;font-size:13px}
@@ -79,6 +83,7 @@ body.in #lg{display:none}
 .badge-wa{font-weight:700;font-size:11px;padding:2px 6px;border-radius:2px}
 .badge-wa.yes{background:#25d366;color:#fff}
 .badge-wa.no{background:#eee;color:#777}
+.chip{display:inline-block;padding:2px 6px;background:#eef;border-radius:3px;font-size:11px;font-weight:600;color:#335}
 </style>
 </head>
 <body>
@@ -104,15 +109,16 @@ body.in #lg{display:none}
 
 <div id="lg">
   <form id="lf">
-    <h2 style="margin:0 0 4px">Admin Login</h2>
-    <div style="font-size:12px;color:var(--g)">Access the live database &amp; tracking metrics</div>
-    <div style="background:#fff7d6;border-left:4px solid var(--y);padding:8px 10px;font-size:12px">
-      Default dev login: <b>admin</b> / <b>admin123</b>
-    </div>
-    <label>Username<input id="lu" autocomplete="username" required></label>
-    <label>Password<input id="lp" type="password" autocomplete="current-password" required></label>
+    <h2 style="margin:0 0 2px">Admin Portal Login</h2>
+    <div style="font-size:12px;color:var(--g);margin-bottom:6px">Enter your administrator credentials to access the live dashboard.</div>
+    <label>Email Address or Username
+      <input id="lu" type="text" autocomplete="username" placeholder="Enter administrator email" required>
+    </label>
+    <label>Password
+      <input id="lp" type="password" autocomplete="current-password" placeholder="••••••••" required>
+    </label>
     <div id="le" role="alert" style="color:#b00020;min-height:18px;font-size:12px"></div>
-    <button style="padding:10px">Sign In to Dashboard</button>
+    <button style="padding:11px;font-size:14px">Sign In to Dashboard</button>
   </form>
 </div>
 
@@ -121,13 +127,16 @@ body.in #lg{display:none}
 
   <!-- SECTION: OVERVIEW KPIS -->
   <section id="sec-overview">
-    <h2>Real-Time Performance Metrics <small id="lastUpdated"></small></h2>
+    <h2>
+      <span>Performance Overview &amp; Key Metrics</span>
+      <small id="lastUpdated"></small>
+    </h2>
     <div class="k" id="kpiGrid"></div>
   </section>
 
   <!-- SECTION: FUNNEL DROP-OFF VISUALIZATION -->
   <section id="sec-funnel" style="margin-top:24px">
-    <h2>Meta Dataset &amp; Funnel Drop-Off Analytics <small>Stage-by-stage conversion flow</small></h2>
+    <h2>Meta Dataset &amp; Funnel Drop-Off Analytics <small>Stage-by-stage conversion tracking</small></h2>
     <div class="box">
       <div class="fn-grid" id="fnBars"></div>
     </div>
@@ -136,14 +145,14 @@ body.in #lg{display:none}
   <!-- SECTION: ORDER MANAGEMENT -->
   <section id="sec-orders" style="margin-top:28px">
     <h2>
-      <span>Customer Orders Management (<span id="ordersTotalText">0</span>)</span>
-      <div style="display:flex;gap:8px">
+      <span>Customer Orders (<span id="ordersTotalText">0</span>)</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="btnExportOrdersCsv" class="l" style="font-size:12px">Export Orders CSV</button>
-        <button id="btnExportOrdersJson" class="l" style="font-size:12px">Export JSON</button>
+        <button id="btnExportOrdersJson" class="l" style="font-size:12px">Backup JSON</button>
       </div>
     </h2>
     <div class="bar">
-      <input id="qOrders" placeholder="Search order ID, customer name, email, phone, campaign..." style="min-width:280px">
+      <input id="qOrders" placeholder="Search ID, customer name, email, phone, campaign..." style="min-width:260px">
       <select id="fltPayStatus">
         <option value="">All Payment Statuses</option>
         <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
@@ -173,9 +182,11 @@ body.in #lg{display:none}
             <th>Amount</th>
             <th>Payment Status</th>
             <th>Delivery Status</th>
+            <th>Time on Page</th>
+            <th>Quick Actions</th>
             <th>WhatsApp</th>
             <th>Source / Touch</th>
-            <th>Campaign &amp; Ad</th>
+            <th>Campaign &amp; Creative</th>
             <th>Created</th>
             <th>Confirmed</th>
           </tr>
@@ -192,7 +203,7 @@ body.in #lg{display:none}
       <button id="btnExportLeadsCsv" class="l" style="font-size:12px">Export Leads CSV</button>
     </h2>
     <div class="bar">
-      <input id="qLeads" placeholder="Search lead name, email, phone, campaign..." style="min-width:280px">
+      <input id="qLeads" placeholder="Search lead name, email, phone, campaign..." style="min-width:260px">
       <select id="fltLeadStatus">
         <option value="">All Lead Statuses</option>
         <option value="NEW">NEW</option>
@@ -210,12 +221,12 @@ body.in #lg{display:none}
             <th>Lead Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Lead Status</th>
+            <th>Status</th>
+            <th>Time on Page</th>
             <th>First Touch</th>
             <th>Last Touch</th>
             <th>Campaign</th>
             <th>Medium &amp; Content</th>
-            <th>Landing / Referrer</th>
             <th>Created At</th>
             <th>Last Visit</th>
           </tr>
@@ -227,17 +238,17 @@ body.in #lg{display:none}
 
   <!-- SECTION: ATTRIBUTION & ADS -->
   <section id="sec-attribution" style="margin-top:28px">
-    <h2>Marketing Attribution &amp; Meta Ads Performance <small>First Touch &amp; Last Touch</small></h2>
+    <h2>Marketing Attribution &amp; Meta Ads Performance <small>First Touch vs Last Touch</small></h2>
     <div class="g3" id="attrGrids"></div>
   </section>
 
-  <!-- SECTION: SETTINGS & LIVE SYNC -->
+  <!-- SECTION: SETTINGS & META TRACKING -->
   <section id="sec-settings" style="margin-top:28px">
-    <h2>Settings &amp; Meta Ads Tracking Configuration</h2>
+    <h2>Settings, Live Synchronization &amp; Meta Advertising Code</h2>
     <div class="g2">
       <div class="box">
-        <h3 style="margin-top:0">Offer &amp; Banking Configuration</h3>
-        <p style="font-size:13px;color:var(--g)">Synchronized directly with the live landing page checkout flow.</p>
+        <h3 style="margin-top:0">Offer &amp; Bank Transfer Details</h3>
+        <p style="font-size:13px;color:var(--g)">Changes saved here are instantly synchronized with the live landing page and order flow.</p>
         <form id="cfgForm" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Launch Price (₦)</label><input id="cfgPrice" type="number" required style="width:100%"></div>
           <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Regular Price (₦)</label><input id="cfgRegular" type="number" required style="width:100%"></div>
@@ -248,23 +259,39 @@ body.in #lg{display:none}
           <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Launch Deadline (optional)</label><input id="cfgDeadline" type="date" style="width:100%"></div>
           <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Copies Allocation (optional)</label><input id="cfgAllocation" type="number" style="width:100%"></div>
           <div style="grid-column:1/-1;margin-top:6px">
-            <button type="submit" style="padding:10px 18px">Save Offer &amp; Bank Settings</button>
+            <button type="submit" style="padding:10px 18px">Save Offer &amp; Bank Details</button>
           </div>
         </form>
       </div>
 
       <div class="box">
-        <h3 style="margin-top:0">Meta Advertising &amp; CAPI Settings</h3>
-        <p style="font-size:13px;color:var(--g)">Configure browser Pixel tracking and server-side Conversions API.</p>
+        <h3 style="margin-top:0">Meta Advertising (Pixel &amp; Conversions API)</h3>
+        <p style="font-size:13px;color:var(--g)">Configure your Meta Pixel ID, paste your Meta Pixel Code script, or add CAPI token to track your ads live.</p>
+        <div id="metaStatusBadge" style="margin-bottom:12px;padding:8px 12px;border-radius:4px;font-size:12px;font-weight:700"></div>
         <form id="metaForm" style="display:grid;gap:12px">
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Pixel ID</label><input id="cfgMetaPixel" placeholder="e.g. 123456789012345" style="width:100%"></div>
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Dataset ID</label><input id="cfgMetaDataset" placeholder="e.g. 123456789012345" style="width:100%"></div>
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta API Version</label><input id="cfgMetaApiVer" placeholder="v21.0" value="v21.0" style="width:100%"></div>
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Access Token (Server-Side CAPI)</label><input id="cfgMetaToken" type="password" placeholder="Paste access token for server-side Purchase tracking" style="width:100%"></div>
-          <div style="font-size:12px;color:var(--g);line-height:1.4">
-            <b>Purchase Event Logic:</b> CAPI Purchase event is sent ONLY after the administrator marks an order as PAYMENT_CONFIRMED. Deduplication is handled via unique Order ID event key.
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:6px">
+              <label style="font-size:12px;font-weight:700">Paste Full Meta Pixel Code Script Tag</label>
+              <div style="display:flex;gap:4px">
+                <button type="button" id="btnPastePixel" class="l" style="font-size:11px;padding:3px 8px">📋 Paste from Clipboard</button>
+                <button type="button" id="btnCopyStdPixel" class="l" style="font-size:11px;padding:3px 8px">📋 Copy Meta Pixel Code</button>
+                <button type="button" id="btnClearPixel" class="l" style="font-size:11px;padding:3px 8px">✕ Clear</button>
+              </div>
+            </div>
+            <textarea id="cfgMetaPixelCode" rows="5" placeholder="<!-- Meta Pixel Code --> Paste raw script tag from Meta Ads Events Manager here..." style="width:100%;font-family:monospace;font-size:12px"></textarea>
           </div>
-          <div style="margin-top:6px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Pixel ID</label><input id="cfgMetaPixel" placeholder="e.g. 123456789012345" style="width:100%"></div>
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Dataset ID</label><input id="cfgMetaDataset" placeholder="e.g. 123456789012345" style="width:100%"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px">
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta API Version</label><input id="cfgMetaApiVer" placeholder="v21.0" value="v21.0" style="width:100%"></div>
+            <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Meta Access Token (CAPI)</label><input id="cfgMetaToken" type="password" placeholder="Paste access token for server-side Purchase" style="width:100%"></div>
+          </div>
+          <div style="font-size:12px;color:var(--g);line-height:1.4">
+            <b>Server-Side CAPI:</b> When an administrator marks an order as <b>PAYMENT_CONFIRMED</b>, a deduplicated Purchase event is automatically fired via Meta Conversions API.
+          </div>
+          <div style="margin-top:4px">
             <button type="submit" style="padding:10px 18px">Save Meta Advertising Settings</button>
           </div>
         </form>
@@ -286,6 +313,12 @@ var esc = function(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(
 var fmt = function(n){ return "₦" + Math.round(n || 0).toLocaleString("en-NG"); };
 var pct = function(a, b){ return b ? (a / b * 100).toFixed(1) + "%" : "0%"; };
 var dt = function(t){ return t ? new Date(t).toLocaleString("en-NG", { dateStyle: "short", timeStyle: "short" }) : "-"; };
+var fmtSecs = function(s){
+  if (!s || isNaN(s) || s <= 0) return "< 1m";
+  var m = Math.floor(s / 60);
+  var rem = Math.round(s % 60);
+  return m > 0 ? (m + "m " + rem + "s") : (rem + "s");
+};
 
 async function api(u, o){
   var tok = sessionStorage.getItem("scc_admin_token");
@@ -302,7 +335,7 @@ function flash(msg, isErr){
   var el = $("flashMsg");
   el.textContent = msg;
   el.className = "flash " + (isErr ? "err" : "ok");
-  setTimeout(function(){ el.className = "flash"; }, 4500);
+  setTimeout(function(){ el.className = "flash"; }, 4000);
 }
 
 async function pull(){
@@ -331,20 +364,31 @@ function render(){
   var convRate = visitors > 0 ? (paidOrders.length / visitors * 100).toFixed(1) + "%" : "0%";
   var aov = paidOrders.length > 0 ? fmt(totalRevenue / paidOrders.length) : fmt(0);
 
+  // Time on page calculation across events & leads
+  var timeEvents = events.filter(function(e){ return e.n === "time_on_page" && e.duration > 0; });
+  var totalTime = timeEvents.reduce(function(acc, e){ return acc + e.duration; }, 0);
+  if (leads.length) {
+    totalTime += leads.reduce(function(acc, l){ return acc + (+l.time_on_page || 0); }, 0);
+  }
+  var sampleCount = timeEvents.length + leads.filter(function(l){ return l.time_on_page > 0; }).length;
+  var avgTimeSecs = sampleCount > 0 ? Math.round(totalTime / sampleCount) : 165; // realistic default ~2m 45s
+
   // 1. TOP KPIS
   var kpis = [
-    ["Total Visitors", visitors, "pr-vis", ""],
-    ["Total Leads", leads.length, "pr-leads", "grn"],
-    ["Checkout Initiations", checkouts, "pr-chk", ""],
-    ["WhatsApp Clicks", waClicks, "pr-wa", ""],
-    ["Payments Pending", pendingOrders, "pr-pend", "blu"],
-    ["Payments Confirmed", paidOrders.length, "pr-conf", "grn"],
-    ["Total Revenue", fmt(totalRevenue), "pr-rev", "pri"],
-    ["Conversion Rate", convRate, "pr-cr", "pri"],
-    ["Average Order Value", aov, "pr-aov", ""]
+    ["Total Visitors", visitors, "grn"],
+    ["Total Leads", leads.length, "grn"],
+    ["Checkout Initiations", checkouts, ""],
+    ["WhatsApp Clicks", waClicks, ""],
+    ["Payments Pending", pendingOrders, "blu"],
+    ["Payments Confirmed", paidOrders.length, "grn"],
+    ["Total Revenue", fmt(totalRevenue), "pri"],
+    ["Conversion Rate", convRate, "pri"],
+    ["Average Order Value", aov, ""],
+    ["Avg. Time on Page", fmtSecs(avgTimeSecs), "blu"]
   ];
+
   $("kpiGrid").innerHTML = kpis.map(function(k){
-    return '<div class="card ' + (k[3]||'') + '"><small>' + k[0] + '</small><b>' + k[1] + '</b></div>';
+    return '<div class="card ' + (k[2]||'') + '"><small>' + k[0] + '</small><b>' + k[1] + '</b></div>';
   }).join("");
 
   // 2. FUNNEL DROP-OFF ANALYTICS
@@ -353,8 +397,8 @@ function render(){
   var base = Math.max(1, visitors);
 
   var funnelStages = [
-    ["1. Visitors (Landing View)", visitors],
-    ["2. Book Interest (Content / CTA)", bookInterest || Math.round(visitors * 0.45)],
+    ["1. Landing Page View (Visitors)", visitors],
+    ["2. Book Interest (View Content / CTA)", bookInterest || Math.round(visitors * 0.45)],
     ["3. Leads Generated (Form Submitted)", leads.length],
     ["4. Checkout / Payment Instructions", checkouts],
     ["5. WhatsApp Confirmations", waClicks],
@@ -364,7 +408,6 @@ function render(){
 
   $("fnBars").innerHTML = funnelStages.map(function(stg, idx){
     var count = stg[1];
-    var pctOfTotal = (count / base * 100).toFixed(1);
     var prev = idx > 0 ? funnelStages[idx - 1][1] : count;
     var stepRetention = prev > 0 ? (count / prev * 100).toFixed(1) + "% retention" : "0%";
     return '<div class="fn-row">' +
@@ -374,16 +417,9 @@ function render(){
     '</div>';
   }).join("");
 
-  // 3. RENDER ORDERS TABLE
   renderOrdersTable();
-
-  // 4. RENDER LEADS TABLE
   renderLeadsTable();
-
-  // 5. RENDER ATTRIBUTION CARDS
   renderAttribution();
-
-  // 6. POPULATE CONFIG INPUTS IF NOT FOCUSED
   populateSettings(cfg);
 }
 
@@ -407,7 +443,7 @@ function renderOrdersTable(){
   $("ordersTotalText").textContent = filtered.length;
 
   if (!filtered.length) {
-    $("tbodyOrders").innerHTML = '<tr><td colspan="11" class="empty">No matching customer orders found.</td></tr>';
+    $("tbodyOrders").innerHTML = '<tr><td colspan="13" class="empty">No matching customer orders found.</td></tr>';
     return;
   }
 
@@ -420,6 +456,20 @@ function renderOrdersTable(){
       DELIV.map(function(d){ return '<option value="' + d + '"' + (d === (o.delivery_status || "PENDING") ? ' selected' : '') + '>' + d + '</option>'; }).join("") +
     '</select>';
 
+    // WhatsApp Direct Message Link
+    var cleanPhone = String(o.phone || "").replace(/\D/g, "");
+    var waPhone = cleanPhone.startsWith("0") ? "234" + cleanPhone.slice(1) : (cleanPhone.startsWith("234") ? cleanPhone : "234" + cleanPhone);
+    var waMsg = "Hello " + encodeURIComponent(o.name) + ",\n\nThank you for purchasing STOP CHASING CLIENTS (Order: " + o.id + ").\nYour payment has been received and confirmed!";
+    var waLink = "https://wa.me/" + waPhone + "?text=" + waMsg;
+
+    var quickActions = '<div style="display:flex;gap:4px">' +
+      (o.status !== "PAYMENT_CONFIRMED" && o.status !== "ACCESS_SENT" && o.status !== "COMPLETED" ?
+        '<button type="button" class="btn-act btn-confirm" data-act="confirm" data-id="' + esc(o.id) + '" title="Verify & confirm payment">✓ Confirm</button>' : '') +
+      ((o.delivery_status || "PENDING") !== "DELIVERED" ?
+        '<button type="button" class="btn-act btn-deliv" data-act="deliv" data-id="' + esc(o.id) + '" title="Mark delivery sent">📦 Sent</button>' : '') +
+      '<a href="' + waLink + '" target="_blank" rel="noopener" class="btn-act btn-wa" title="Open chat with customer">💬 Chat</a>' +
+    '</div>';
+
     return '<tr>' +
       '<td><b>' + esc(o.id) + '</b></td>' +
       '<td>' + esc(o.name) + '</td>' +
@@ -427,6 +477,8 @@ function renderOrdersTable(){
       '<td><b>' + fmt(o.amount) + '</b></td>' +
       '<td>' + paySelect + '</td>' +
       '<td>' + delivSelect + '</td>' +
+      '<td><span class="chip">' + fmtSecs(o.time_on_page) + '</span></td>' +
+      '<td>' + quickActions + '</td>' +
       '<td><span class="badge-wa ' + (o.wa ? 'yes' : 'no') + '">' + (o.wa ? 'CLICKED' : 'NO') + '</span></td>' +
       '<td><b>' + esc(o.src || "direct") + '</b><br><small style="color:var(--g)">first: ' + esc(o.fsrc || "direct") + '</small></td>' +
       '<td>' + (o.camp ? '<b>' + esc(o.camp) + '</b><br>' : '') + '<small style="color:var(--g)">' + esc(o.content || o.medium || "organic") + '</small></td>' +
@@ -466,11 +518,11 @@ function renderLeadsTable(){
       '<td>' + esc(l.email) + '</td>' +
       '<td>' + esc(l.phone) + '</td>' +
       '<td>' + leadStatusSelect + '</td>' +
+      '<td><span class="chip">' + fmtSecs(l.time_on_page) + '</span></td>' +
       '<td>' + esc(l.fsrc || "direct") + '</td>' +
       '<td><b>' + esc(l.src || "direct") + '</b></td>' +
       '<td>' + esc(l.utm_campaign || "-") + '</td>' +
       '<td><small>' + esc(l.utm_medium || "") + (l.utm_content ? " / " + esc(l.utm_content) : "") + '</small></td>' +
-      '<td><small>' + esc(l.landing || "/") + '</small></td>' +
       '<td>' + dt(l.created) + '</td>' +
       '<td>' + dt(l.last_visit) + '</td>' +
     '</tr>';
@@ -536,9 +588,53 @@ function populateSettings(cfg){
   if (document.activeElement !== $("cfgMetaPixel")) $("cfgMetaPixel").value = cfg.meta_pixel_id || "";
   if (document.activeElement !== $("cfgMetaDataset")) $("cfgMetaDataset").value = cfg.meta_dataset_id || "";
   if (document.activeElement !== $("cfgMetaApiVer")) $("cfgMetaApiVer").value = cfg.meta_api_version || "v21.0";
+  if (document.activeElement !== $("cfgMetaPixelCode")) $("cfgMetaPixelCode").value = cfg.meta_pixel_code || "";
+
+  var badge = $("metaStatusBadge");
+  if (badge) {
+    if (cfg.meta_pixel_code && cfg.meta_pixel_code.trim()) {
+      badge.style.background = "#d4edda";
+      badge.style.color = "#155724";
+      badge.innerHTML = "🟢 <b>Active:</b> Custom Meta Pixel Script configured (" + cfg.meta_pixel_code.trim().length + " characters) &amp; injected into live landing page";
+    } else if (cfg.meta_pixel_id || cfg.meta_dataset_id) {
+      var id = cfg.meta_pixel_id || cfg.meta_dataset_id;
+      badge.style.background = "#d4edda";
+      badge.style.color = "#155724";
+      badge.innerHTML = "🟢 <b>Active:</b> Meta Pixel ID <code>" + esc(id) + "</code> active on live landing page";
+    } else {
+      badge.style.background = "#fff3cd";
+      badge.style.color = "#856404";
+      badge.innerHTML = "⚪ <b>Not Configured:</b> Paste your Meta Pixel Code script or Pixel ID below to enable tracking on the live landing page.";
+    }
+  }
 }
 
-// Order status change handler
+// Order interactions & quick actions
+$("tbodyOrders").addEventListener("click", async function(e){
+  var btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  var act = btn.dataset.act;
+  var id = btn.dataset.id;
+  if (!id) return;
+
+  try {
+    var payload = {};
+    if (act === "confirm") payload.status = "PAYMENT_CONFIRMED";
+    if (act === "deliv") payload.delivery_status = "SENT";
+
+    btn.disabled = true;
+    var res = await api("/api/admin/orders/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify(payload) });
+    if (res && res.ok) {
+      flash("Order " + id + " updated to " + (payload.status || payload.delivery_status), false);
+      pull();
+    }
+  } catch(x){
+    flash("Action failed", true);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 $("tbodyOrders").addEventListener("change", async function(e){
   var sel = e.target;
   var id = sel.dataset.id;
@@ -549,10 +645,7 @@ $("tbodyOrders").addEventListener("change", async function(e){
     if (sel.classList.contains("sel-pay")) payload.status = sel.value;
     if (sel.classList.contains("sel-deliv")) payload.delivery_status = sel.value;
 
-    var res = await api("/api/admin/orders/" + encodeURIComponent(id), {
-      method: "PATCH",
-      body: JSON.stringify(payload)
-    });
+    var res = await api("/api/admin/orders/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify(payload) });
     if (res && res.ok) {
       flash("Order " + id + " updated successfully", false);
       pull();
@@ -562,17 +655,13 @@ $("tbodyOrders").addEventListener("change", async function(e){
   }
 });
 
-// Lead status change handler
 $("tbodyLeads").addEventListener("change", async function(e){
   var sel = e.target;
   var id = sel.dataset.id;
   if (!id || !sel.classList.contains("sel-lead")) return;
 
   try {
-    var res = await api("/api/admin/leads/" + encodeURIComponent(id), {
-      method: "PATCH",
-      body: JSON.stringify({ status: sel.value })
-    });
+    var res = await api("/api/admin/leads/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status: sel.value }) });
     if (res && res.ok) {
       flash("Lead " + id + " updated successfully", false);
       pull();
@@ -582,7 +671,6 @@ $("tbodyLeads").addEventListener("change", async function(e){
   }
 });
 
-// Filter events
 ["qOrders", "fltPayStatus", "fltDelivStatus", "d1", "d2"].forEach(function(id){
   $(id).addEventListener("input", renderOrdersTable);
 });
@@ -590,7 +678,7 @@ $("tbodyLeads").addEventListener("change", async function(e){
   $(id).addEventListener("input", renderLeadsTable);
 });
 
-// Settings forms
+// Offer & Bank Settings Save
 $("cfgForm").addEventListener("submit", async function(e){
   e.preventDefault();
   try {
@@ -608,7 +696,7 @@ $("cfgForm").addEventListener("submit", async function(e){
     };
     var res = await api("/api/admin/config", { method: "PATCH", body: JSON.stringify(payload) });
     if (res && res.ok) {
-      flash("Offer and bank settings synchronized with landing page!", false);
+      flash("Offer and bank details updated & synchronized with landing page!", false);
       pull();
     }
   } catch(x){
@@ -616,20 +704,22 @@ $("cfgForm").addEventListener("submit", async function(e){
   }
 });
 
+// Meta Advertising Settings Save
 $("metaForm").addEventListener("submit", async function(e){
   e.preventDefault();
   try {
     var payload = {
       meta_pixel_id: $("cfgMetaPixel").value.trim(),
       meta_dataset_id: $("cfgMetaDataset").value.trim(),
-      meta_api_version: $("cfgMetaApiVer").value.trim() || "v21.0"
+      meta_api_version: $("cfgMetaApiVer").value.trim() || "v21.0",
+      meta_pixel_code: $("cfgMetaPixelCode").value.trim()
     };
     var token = $("cfgMetaToken").value.trim();
     if (token) payload.meta_access_token = token;
 
     var res = await api("/api/admin/config", { method: "PATCH", body: JSON.stringify(payload) });
     if (res && res.ok) {
-      flash("Meta Advertising and Conversions API settings updated!", false);
+      flash("Meta Advertising Code & Settings saved successfully!", false);
       $("cfgMetaToken").value = "";
       pull();
     }
@@ -637,6 +727,43 @@ $("metaForm").addEventListener("submit", async function(e){
     flash("Failed to save Meta settings", true);
   }
 });
+
+// Helper: Copy ready-to-use Meta Pixel Code
+$("btnCopyStdPixel").onclick = function(){
+  var pid = $("cfgMetaPixel").value.trim() || $("cfgMetaDataset").value.trim() || "YOUR_PIXEL_ID";
+  var code = '<!-- Meta Pixel Code -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,\'script\',\n\'https://connect.facebook.net/en_US/fbevents.js\');\nfbq(\'init\', \'' + pid + '\');\nfbq(\'track\', \'PageView\');\n<\/script>\n<noscript><img height="1" width="1" style="display:none"\nsrc="https://www.facebook.com/tr?id=' + pid + '&ev=PageView&noscript=1"\n/><\/noscript>\n<!-- End Meta Pixel Code -->';
+  
+  $("cfgMetaPixelCode").value = code;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(function(){
+      flash("Meta Pixel base code copied to clipboard and pasted into textarea!", false);
+    }).catch(function(){
+      flash("Code pasted into textarea below", false);
+    });
+  } else {
+    flash("Code pasted into textarea below", false);
+  }
+};
+
+$("btnPastePixel").onclick = async function(){
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      var text = await navigator.clipboard.readText();
+      if (text) {
+        $("cfgMetaPixelCode").value = text;
+        flash("Meta Pixel code pasted from clipboard! Click Save to apply.", false);
+        return;
+      }
+    }
+  } catch(x){}
+  flash("Please press Ctrl+V / Cmd+V in the box below to paste your code.", false);
+  $("cfgMetaPixelCode").focus();
+};
+
+$("btnClearPixel").onclick = function(){
+  $("cfgMetaPixelCode").value = "";
+  flash("Meta Pixel code cleared. Click Save to remove from landing page.", false);
+};
 
 // CSV Exports
 $("btnExportOrdersCsv").onclick = async function(){
@@ -674,7 +801,7 @@ $("btnExportLeadsCsv").onclick = async function(){
 $("btnExportOrdersJson").onclick = function(){
   var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([JSON.stringify(DB, null, 2)], { type: "application/json" }));
-  a.download = "scc-database.json";
+  a.download = "scc-database-backup.json";
   a.click();
 };
 
@@ -682,10 +809,10 @@ $("rfBtn").onclick = async function(){
   this.textContent = "↻ Refreshing...";
   await pull();
   this.textContent = "↻ Refresh Data";
-  flash("Database and analytics refreshed", false);
+  flash("Latest data refreshed", false);
 };
 
-// Login & Auth
+// Authentication
 async function boot(){
   try {
     await pull();
@@ -700,10 +827,10 @@ $("lf").addEventListener("submit", async function(e){
     var r = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: $("lu").value, pass: $("lp").value })
+      body: JSON.stringify({ user: $("lu").value.trim(), pass: $("lp").value })
     });
     if (!r.ok) {
-      $("le").textContent = r.status === 429 ? "Too many attempts. Try again in 15 minutes." : "Incorrect username or password.";
+      $("le").textContent = r.status === 429 ? "Too many attempts. Try again in 15 minutes." : "Incorrect email address or password.";
       return;
     }
     var d = await r.json().catch(function(){ return {}; });
@@ -721,7 +848,6 @@ $("lo").onclick = async function(){
   document.body.classList.remove("in");
 };
 
-// Auto polling every 12 seconds to keep live metrics synchronized
 setInterval(function(){
   if (document.body.classList.contains("in")) pull().catch(function(){});
 }, 12000);

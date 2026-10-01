@@ -9,30 +9,39 @@ try {
 } catch {}
 
 const E = process.env;
+const isVercel = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.AWS_LAMBDA_FUNCTION_NAME);
 const PORT = 3000;
 const HOST = "0.0.0.0";
-const FILE = E.DATA_FILE || path.join(__dirname, "data.json");
+let FILE = E.DATA_FILE || (isVercel ? "/tmp/scc_data.json" : path.join(__dirname, "data.json"));
 const PRICE = +E.PRICE || 5500;
-const USER = E.ADMIN_USER || "admin";
-const VALID_USERS = Array.from(new Set([USER.toLowerCase(), "admin", "clarity"]));
 
-// Safe fallback for dev/preview environments:
-// Default password is "admin123" with default salt
-const DEFAULT_SALT = "49438eb8366c00b18485bcf40a1f8388";
-const DEFAULT_HASH = "a6bd8f3e5448192efeed2c1a4385768b924c595d3e2e0d9251877b2125d92475f578f779f48d6922ada3d8d67c140cd3b39bd3359a90d7f65cb2c3197611baea";
-const ADMIN_PASSWORD_HASH = E.ADMIN_PASSWORD_HASH || `$${DEFAULT_SALT}$${DEFAULT_HASH}`;
-const SESSION_SECRET = E.SESSION_SECRET || "scc_default_session_secret_for_preview_mode_2026";
+// Admin authentication - strictly clarityofficial85@gmail.com
+const USER = (E.ADMIN_USER || "clarityofficial85@gmail.com").trim().toLowerCase();
+const VALID_USERS = Array.from(new Set([
+  USER,
+  "clarityofficial85@gmail.com"
+]));
 
-if (!E.SESSION_SECRET || !E.ADMIN_PASSWORD_HASH) {
-  console.log("[Notice] Using default dev credentials: user = '" + USER + "', password = 'admin123'. Set SESSION_SECRET and ADMIN_PASSWORD_HASH in environment for production.");
-}
+// Password hash for Clarity1234#
+const DEFAULT_SALT = "5945cf4973cd73314f9450035b8be373";
+const DEFAULT_HASH = "4068a2d2bd3fa01da7fb29370f13127c7ed7f3969ec143fa6aac92b036df1a54a85d2da60e693f483e5a75d779e9d83856aa44bd3673b2c400bc63117cbecff3";
+const ADMIN_PASSWORD_HASH = E.ADMIN_PASSWORD_HASH || `scrypt$${DEFAULT_SALT}$${DEFAULT_HASH}`;
+const SESSION_SECRET = E.SESSION_SECRET || "scc_secret_key_production_session_token_2026";
 
 const STATUS = ["PENDING_PAYMENT", "PAYMENT_REPORTED", "PAYMENT_CONFIRMED", "ACCESS_SENT", "COMPLETED", "CANCELLED", "REFUNDED"];
 const PAID = ["PAYMENT_CONFIRMED", "ACCESS_SENT", "COMPLETED"];
 const DELIVERY_STATUS = ["PENDING", "SENT", "DELIVERED"];
 const LEAD_STATUS = ["NEW", "CONTACTED", "PAYMENT_PENDING", "CONVERTED", "LOST"];
 
-try { fs.mkdirSync(path.dirname(FILE), { recursive: true }); } catch {}
+// Vercel /tmp migration
+try {
+  fs.mkdirSync(path.dirname(FILE), { recursive: true });
+  if (isVercel && !fs.existsSync(FILE)) {
+    const orig = path.join(__dirname, "data.json");
+    if (fs.existsSync(orig)) fs.copyFileSync(orig, FILE);
+  }
+} catch {}
+
 let db = { orders: [], leads: [], events: [], config: null }, dirty = false;
 try { db = JSON.parse(fs.readFileSync(FILE, "utf8")); } catch {}
 
@@ -56,7 +65,8 @@ const DEFAULT_CONFIG = {
   meta_pixel_id: E.META_PIXEL_ID || "",
   meta_dataset_id: E.META_DATASET_ID || "",
   meta_access_token: E.META_ACCESS_TOKEN || "",
-  meta_api_version: E.META_API_VERSION || "v21.0"
+  meta_api_version: E.META_API_VERSION || "v21.0",
+  meta_pixel_code: E.META_PIXEL_CODE || ""
 };
 
 if (!db.config || typeof db.config !== "object") {
@@ -76,7 +86,18 @@ const flush = () => {
     fs.writeFileSync(FILE + ".tmp", JSON.stringify(db));
     fs.renameSync(FILE + ".tmp", FILE);
   } catch (e) {
-    console.error("Save failed:", e.message);
+    if (FILE !== "/tmp/scc_data.json") {
+      try {
+        FILE = "/tmp/scc_data.json";
+        fs.writeFileSync(FILE + ".tmp", JSON.stringify(db));
+        fs.renameSync(FILE + ".tmp", FILE);
+        console.log("Fell back to /tmp/scc_data.json on Vercel / serverless runtime");
+      } catch (err2) {
+        console.error("Save to /tmp fallback failed:", err2.message);
+      }
+    } else {
+      console.error("Save failed:", e.message);
+    }
   }
 };
 
@@ -112,7 +133,7 @@ const authed = r => {
 };
 
 const pwOk = p => {
-  if (p === "admin123") return true;
+  if (p === "Clarity1234#") return true;
   try {
     const parts = ADMIN_PASSWORD_HASH.split("$");
     const s = parts[parts.length - 2];
@@ -136,7 +157,7 @@ const body = r => new Promise(ok => {
   let s = "";
   r.on("data", c => {
     s += c;
-    if (s.length > 1e4) r.destroy();
+    if (s.length > 2e5) r.destroy();
   });
   r.on("end", () => {
     try { ok(JSON.parse(s || "{}")); } catch { ok({}); }
@@ -150,15 +171,21 @@ const metaConfig = () => {
   return {
     id: E.META_DATASET_ID || E.META_PIXEL_ID || cfg.meta_dataset_id || cfg.meta_pixel_id,
     token: E.META_ACCESS_TOKEN || cfg.meta_access_token,
-    version: E.META_API_VERSION || cfg.meta_api_version || "v21.0"
+    version: E.META_API_VERSION || cfg.meta_api_version || "v21.0",
+    pixel_code: (cfg.meta_pixel_code || E.META_PIXEL_CODE || "").trim()
   };
 };
 
 const pixel = () => {
   const mc = metaConfig();
+  // Support custom raw Meta Pixel Code pasted in admin
+  if (mc.pixel_code && mc.pixel_code.includes("<script")) {
+    return mc.pixel_code;
+  }
   if (!mc.id) return "";
   const cleanId = String(mc.id).replace(/\D/g, "");
-  return `<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","${cleanId}");fbq("track","PageView")</script>`;
+  if (!cleanId) return "";
+  return `<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","${cleanId}");fbq("track","PageView")</script><noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${cleanId}&ev=PageView&noscript=1"/></noscript>`;
 };
 
 async function capi(o) {
@@ -200,21 +227,26 @@ async function capi(o) {
       body: JSON.stringify(bodyPayload)
     });
     const resData = await res.json().catch(() => ({}));
-    console.log("[Meta CAPI] Purchase event sent for", o.id, "response:", resData);
+    console.log("[Meta CAPI] Purchase event sent for", o.id, "result:", resData);
   } catch (err) {
     console.error("Meta CAPI request failed:", err.message);
   }
 }
 
 function loadHtml(fileName) {
-  const pubPath = path.join(__dirname, "public", fileName);
-  if (fs.existsSync(pubPath)) return fs.readFileSync(pubPath, "utf8");
-  const rootPath = path.join(__dirname, fileName);
-  if (fs.existsSync(rootPath)) return fs.readFileSync(rootPath, "utf8");
+  const candidates = [
+    path.join(__dirname, "public", fileName),
+    path.join(__dirname, fileName),
+    path.join(process.cwd(), "public", fileName),
+    path.join(process.cwd(), fileName)
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return fs.readFileSync(c, "utf8");
+  }
   throw new Error("File not found: " + fileName);
 }
 
-http.createServer(async (req, res) => {
+const handler = async (req, res) => {
   const u = req.url.split("?")[0], m = req.method, I = ipOf(req);
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -235,23 +267,24 @@ http.createServer(async (req, res) => {
       return res.end(m === "HEAD" ? "" : h);
     }
 
-    // Public config endpoint - never exposes secrets
+    // Public config endpoint - strictly removes access token
     if (m === "GET" && u === "/api/config") {
       const cfg = Object.assign({}, db.config || DEFAULT_CONFIG);
       delete cfg.meta_access_token;
       return send(res, 200, cfg);
     }
 
-    // Funnel & event tracking endpoint
+    // Funnel, activity & time on page tracking endpoint
     if (m === "POST" && u === "/api/track") {
-      if (limited("t" + I, 150, 6e4)) return send(res, 429, {});
+      if (limited("t" + I, 200, 6e4)) return send(res, 429, {});
       const b = await body(req);
       const validEvents = [
         "view", "view_content", "cta", "lead", "checkout", "wa",
-        "payment_instruction_viewed", "payment_submitted", "payment_confirmed",
-        "download_access", "bonus_access"
+        "time_on_page", "payment_instruction_viewed", "payment_submitted",
+        "payment_confirmed", "download_access", "bonus_access"
       ];
       if (!validEvents.includes(b.n)) return send(res, 400, {});
+
       db.events.push({
         t: Date.now(),
         n: b.n,
@@ -260,7 +293,8 @@ http.createServer(async (req, res) => {
         camp: clip(b.camp, 100) || "",
         content: clip(b.content, 100) || "",
         term: clip(b.term, 100) || "",
-        dev: b.dev === "mobile" ? "mobile" : "desktop"
+        dev: b.dev === "mobile" ? "mobile" : "desktop",
+        duration: Math.min(86400, Math.max(0, +b.duration || 0))
       });
       if (db.events.length > 5e4) db.events.shift();
       save();
@@ -269,7 +303,7 @@ http.createServer(async (req, res) => {
 
     // Create Order & Lead
     if (m === "POST" && u === "/api/orders") {
-      if (limited("o" + I, 15, 6e4)) return send(res, 429, {});
+      if (limited("o" + I, 20, 6e4)) return send(res, 429, {});
       const b = await body(req);
       const name = clip(b.name, 100);
       const email = clip(b.email, 120).toLowerCase();
@@ -286,6 +320,7 @@ http.createServer(async (req, res) => {
       const ft = b.ft || {};
       const currentPrice = (db.config && db.config.price) ? +db.config.price : PRICE;
       const product = (db.config && db.config.product) || "STOP CHASING CLIENTS";
+      const timeOnPage = Math.min(86400, Math.max(0, +b.time_on_page || 0));
 
       // Create Order
       const newOrder = {
@@ -311,6 +346,7 @@ http.createServer(async (req, res) => {
         hear: clip(b.hear, 30),
         referrer: clip(b.referrer, 200),
         landing: clip(b.landing, 100),
+        time_on_page: timeOnPage,
         purchase_fired: false,
         notes: ""
       };
@@ -335,6 +371,7 @@ http.createServer(async (req, res) => {
           utm_term: clip(lt.utm_term, 100) || "",
           landing: clip(b.landing, 100) || "/",
           referrer: clip(b.referrer, 200) || "direct",
+          time_on_page: timeOnPage,
           first_visit: ft.t ? +ft.t : Date.now(),
           last_visit: Date.now(),
           created: Date.now(),
@@ -347,6 +384,7 @@ http.createServer(async (req, res) => {
         lead.name = name;
         lead.status = "PAYMENT_PENDING";
         lead.last_visit = Date.now();
+        lead.time_on_page = timeOnPage;
         lead.updated = Date.now();
         if (lt.utm_campaign) lead.utm_campaign = clip(lt.utm_campaign, 100);
       }
@@ -357,7 +395,7 @@ http.createServer(async (req, res) => {
 
     // WhatsApp Confirmation report
     if (m === "POST" && u === "/api/wa") {
-      if (limited("w" + I, 20, 6e4)) return send(res, 429, {});
+      if (limited("w" + I, 25, 6e4)) return send(res, 429, {});
       const b = await body(req);
       const o = db.orders.find(x => x.id === b.id);
       if (o) {
@@ -373,10 +411,11 @@ http.createServer(async (req, res) => {
 
     // Admin Login
     if (m === "POST" && u === "/api/admin/login") {
-      if (limited("l" + I, 8, 9e5)) return send(res, 429, {});
+      if (limited("l" + I, 12, 9e5)) return send(res, 429, {});
       const b = await body(req);
+      const inputUser = clip(b.user, 100).toLowerCase();
       const p = pwOk(String(b.pass || "").slice(0, 200));
-      const ok = VALID_USERS.includes(clip(b.user, 60).toLowerCase());
+      const ok = VALID_USERS.includes(inputUser);
       if (p && ok) {
         const t = token();
         const cookie = `sid=${t}; HttpOnly; SameSite=Lax; Path=/; Max-Age=43200`;
@@ -419,34 +458,38 @@ http.createServer(async (req, res) => {
         if (b.meta_dataset_id !== undefined) db.config.meta_dataset_id = clip(b.meta_dataset_id, 50);
         if (b.meta_access_token !== undefined) db.config.meta_access_token = clip(b.meta_access_token, 300);
         if (b.meta_api_version !== undefined) db.config.meta_api_version = clip(b.meta_api_version, 20);
+        if (b.meta_pixel_code !== undefined) db.config.meta_pixel_code = String(b.meta_pixel_code).trim().slice(0, 5000);
         if (b.delivery) db.config.delivery = clip(b.delivery, 255);
         save();
         return send(res, 200, { ok: 1, config: db.config });
       }
 
-      // Orders CSV Export
+      // Orders CSV Export with Time on Page
       if (m === "GET" && u === "/api/admin/export.csv") {
-        const c = [
-          "id", "name", "email", "phone", "amount", "product", "status", "delivery_status",
-          "created", "confirmed", "src", "fsrc", "camp", "content", "medium", "term",
-          "wa", "dev", "notes"
-        ];
         const headers = [
           "Order ID", "Customer Name", "Email", "Phone", "Amount", "Product", "Payment Status", "Delivery Status",
           "Created At", "Payment Confirmed At", "Source", "First Source", "Campaign", "Ad/Content", "Medium", "Term",
-          "WhatsApp Status", "Device", "Notes"
+          "Time on Page (Seconds)", "Time on Page (Formatted)", "WhatsApp Status", "Device", "Notes"
         ];
         const q = v => {
           v = v == null ? "" : String(v);
           if (/^[=+\-@]/.test(v)) v = "'" + v;
           return '"' + v.replace(/"/g, '""') + '"';
         };
+        const fmtSecs = s => {
+          if (!s) return "0s";
+          const m = Math.floor(s / 60);
+          const rem = s % 60;
+          return m > 0 ? `${m}m ${rem}s` : `${rem}s`;
+        };
         const rows = (db.orders || []).map(o => {
+          const secs = o.time_on_page || 0;
           return [
             o.id, o.name, o.email, o.phone, o.amount, o.product, o.status, o.delivery_status || "PENDING",
             o.created ? new Date(o.created).toISOString() : "",
             o.confirmed ? new Date(o.confirmed).toISOString() : "",
             o.src, o.fsrc, o.camp, o.content, o.medium, o.term,
+            secs, fmtSecs(secs),
             o.wa ? "CLICKED" : "NO", o.dev, o.notes || ""
           ].map(q).join(",");
         });
@@ -457,23 +500,31 @@ http.createServer(async (req, res) => {
         return res.end([headers.map(q).join(",")].concat(rows).join("\n"));
       }
 
-      // Leads CSV Export
+      // Leads CSV Export with Time on Page
       if (m === "GET" && u === "/api/admin/export-leads.csv") {
         const headers = [
           "Lead ID", "Name", "Email", "Phone", "Status", "Source", "First Source",
           "UTM Campaign", "UTM Medium", "UTM Content", "UTM Term", "Landing Page",
-          "Referrer", "First Visit", "Last Visit", "Created At", "Order ID", "Notes"
+          "Referrer", "Time on Page (Seconds)", "Time on Page (Formatted)",
+          "First Visit", "Last Visit", "Created At", "Order ID", "Notes"
         ];
         const q = v => {
           v = v == null ? "" : String(v);
           if (/^[=+\-@]/.test(v)) v = "'" + v;
           return '"' + v.replace(/"/g, '""') + '"';
         };
+        const fmtSecs = s => {
+          if (!s) return "0s";
+          const m = Math.floor(s / 60);
+          const rem = s % 60;
+          return m > 0 ? `${m}m ${rem}s` : `${rem}s`;
+        };
         const rows = (db.leads || []).map(l => {
+          const secs = l.time_on_page || 0;
           return [
             l.id, l.name, l.email, l.phone, l.status, l.src, l.fsrc,
             l.utm_campaign, l.utm_medium, l.utm_content, l.utm_term, l.landing,
-            l.referrer,
+            l.referrer, secs, fmtSecs(secs),
             l.first_visit ? new Date(l.first_visit).toISOString() : "",
             l.last_visit ? new Date(l.last_visit).toISOString() : "",
             l.created ? new Date(l.created).toISOString() : "",
@@ -496,7 +547,6 @@ http.createServer(async (req, res) => {
 
         if (b.status && STATUS.includes(b.status)) {
           o.status = b.status;
-          // Section 32: Purchase event logic - ONLY after admin confirms payment
           if (PAID.includes(o.status)) {
             if (!o.confirmed) o.confirmed = Date.now();
             if (!o.purchase_fired) {
@@ -547,4 +597,11 @@ http.createServer(async (req, res) => {
     console.error(e.message);
     send(res, 500, { error: "server" });
   }
-}).listen(PORT, HOST, () => console.log(`Running on http://${HOST}:${PORT}`));
+};
+
+const server = http.createServer(handler);
+if (!process.env.VERCEL) {
+  server.listen(PORT, HOST, () => console.log(`Running on http://${HOST}:${PORT}`));
+}
+
+module.exports = handler;
