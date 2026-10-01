@@ -254,16 +254,76 @@ section+section{content-visibility:auto;contain-intrinsic-size:auto 640px}img{ma
 </section>
 
 <section class="blk" id="buy"><div class="wrap" style="text-align:center"><div class="kick" style="margin:0 auto 10px">LAUNCH EDITION</div><h2>YOU CAN KEEP FIGURING IT OUT ALONE. OR YOU CAN GET THE <mark>SYSTEM.</mark></h2>
-<div class="price"><div style="font-size:13px;color:#6B6B6B;font-weight:600">REGULAR PRICE</div><s class="R" style="font-size:24px;color:#6B6B6B"></s><div style="font:800 13px Montserrat;margin-top:8px">LAUNCH PRICE</div><div class="big P"></div><span class="tag">SAVE <i class="S" style="font-style:normal"></i></span><p id="cd" style="font-weight:700;margin:12px 0 0"></p><p style="font-size:14px;margin:12px 0 0">The ebook, practical frameworks, worksheets and three career resources.</p></div>
-<div style="background:#fff;color:#000;padding:32px 24px;margin:24px auto 0;max-width:600px;text-align:left;border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,0.5)" id="box"><div id="formBox" style="text-align:center"><h3 style="font-size:22px">Reserve your copy</h3><p style="font-size:14px;color:#555;margin-bottom:20px">Enter your details, then pay by bank transfer. Your access is sent after your payment is confirmed.</p>
-<form id="f" novalidate style="margin:0 auto;text-align:left"><div style="text-align:left"><label for="n">Full name</label><input id="n" autocomplete="name" required><div class="err" id="en"></div></div><div style="text-align:left"><label for="e">Email address</label><input id="e" type="email" autocomplete="email" required><div class="err" id="ee"></div></div><div style="text-align:left"><label for="p">Phone / WhatsApp number</label><input id="p" type="tel" autocomplete="tel" required><div class="err" id="ep"></div></div>
-<div style="text-align:left"><label for="s">How did you hear about this book? (optional)</label><select id="s"><option value="">Select</option><option>Facebook</option><option>Instagram</option><option>WhatsApp</option><option>Referral</option><option>Search</option><option>Other</option></select></div>
-<label class="chk" style="text-align:left"><input type="checkbox" id="c"><span>I agree to receive information related to my purchase and relevant updates from Clarity Digital Marketing.</span></label><div class="err" id="ec"></div>
-<button class="btn" type="submit" id="go" style="margin:8px auto 0;max-width:100%">GET THE COMPLETE GUIDE FOR <span class="P"></span></button></form></div>
-<div id="payBox" hidden style="text-align:center"><h2 style="font-size:28px">YOU'RE ONE STEP AWAY FROM GETTING THE BOOK.</h2><p style="color:#555">Your order is pending payment. You have not purchased yet. Transfer the amount below, then confirm on WhatsApp.</p>
-<div class="pay" style="margin:16px auto;text-align:left"><dl><dt>Order reference</dt><dd id="oref"></dd><dt>Amount</dt><dd class="P"></dd><dt>Bank</dt><dd id="bk"></dd><dt>Account name</dt><dd id="an"></dd><dt>Account number</dt><dd><span id="ac"></span> <button type="button" id="cp" class="btn dk" style="display:inline-block;width:auto;padding:6px 14px;font-size:13px;margin-left:8px">COPY</button></dd><dt>Payment reference</dt><dd id="pr"></dd></dl></div>
-<ol style="display:inline-block;text-align:left;max-width:520px;padding-left:24px"><li>Transfer the exact amount and use your order reference.</li><li>Tap the button below and send the prefilled message.</li><li>After your payment is verified, access is sent to your email.</li></ol>
-<a class="btn" id="wa" target="_blank" rel="noopener" style="margin:16px auto 0;max-width:100%">CONFIRM PAYMENT ON WHATSAPP</a></div></div></div></section>
+<div class="price" style="background:#fff;color:#000;padding:28px 22px;max-width:580px;margin:24px auto 0;text-align:center;border:4px solid var(--y);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.3)">
+  <div style="font-size:13px;color:#6B6B6B;font-weight:700;letter-spacing:1px">NORMAL / REGULAR PRICE</div>
+  <s class="R" style="font-size:24px;color:#6B6B6B;font-weight:700"></s>
+  <div style="font:800 13px Montserrat;margin-top:10px;color:#995B00;letter-spacing:1px" id="launchPriceLabel">SPECIAL LAUNCH DISCOUNT</div>
+  <div class="big P" style="font:900 52px Montserrat;margin:4px 0"></div>
+  <span class="tag" id="priceTag" style="background:var(--y);color:#000;font:800 13px Montserrat;padding:4px 12px;border-radius:4px;display:inline-block">SAVE <i class="S" style="font-style:normal"></i> NOW</span>
+
+  <!-- Live Countdown Timer Container -->
+  <div id="countdownBox" style="background:#FFF9E6;border:2px solid #FFC400;border-radius:6px;padding:16px;margin:18px auto 14px;max-width:480px;text-align:center">
+    <div style="font:700 12px Montserrat;color:#995B00;letter-spacing:1px;text-transform:uppercase" id="cdStatusTitle">LAUNCH PRICE DEADLINE COUNTDOWN</div>
+    <div id="countdownDisplay" style="font-family:Montserrat,sans-serif;font-weight:900;font-size:28px;color:#000;margin:8px 0;letter-spacing:1px">--:--:--</div>
+    <p id="cdNotice" style="font-size:13px;color:#444;margin:0;line-height:1.4">
+      <b>Urgency:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R"></b>. Lock in your discount today.
+    </p>
+  </div>
+
+  <p style="font-size:14px;color:#555;margin:12px 0 0">Includes the full ebook, practical frameworks, worksheets, and 3 career resources.</p>
+</div>
+
+<div style="background:#fff;color:#000;padding:32px 24px;margin:24px auto 0;max-width:600px;text-align:left;border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,0.5)" id="box">
+  <div id="formBox" style="text-align:center">
+    <h3 style="font-size:22px">Reserve your copy</h3>
+    <div id="formUrgencyBanner" style="background:#FFF9E6;border-left:4px solid #FFC400;padding:12px 16px;border-radius:4px;margin-bottom:18px;font-size:13.5px;color:#333;text-align:left;line-height:1.45">
+      <b style="color:#995B00">⚡ Launch Window Active:</b> Lock in your discounted launch price of <b><span class="P"></span></b> now. Once the deadline countdown reaches zero, the price increases back to the normal price of <b><span class="R"></span></b>.
+    </div>
+    <p style="font-size:14px;color:#555;margin-bottom:20px">Enter your details, then pay by bank transfer. Your access is sent after your payment is confirmed.</p>
+    <form id="f" novalidate style="margin:0 auto;text-align:left">
+      <div style="text-align:left"><label for="n">Full name</label><input id="n" autocomplete="name" required><div class="err" id="en"></div></div>
+      <div style="text-align:left"><label for="e">Email address</label><input id="e" type="email" autocomplete="email" required><div class="err" id="ee"></div></div>
+      <div style="text-align:left"><label for="p">Phone / WhatsApp number</label><input id="p" type="tel" autocomplete="tel" required><div class="err" id="ep"></div></div>
+      <div style="text-align:left"><label for="s">How did you hear about this book? (optional)</label><select id="s"><option value="">Select</option><option>Facebook</option><option>Instagram</option><option>WhatsApp</option><option>Referral</option><option>Search</option><option>Other</option></select></div>
+      <label class="chk" style="text-align:left"><input type="checkbox" id="c"><span>I agree to receive information related to my purchase and relevant updates from Clarity Digital Marketing.</span></label><div class="err" id="ec"></div>
+      <button class="btn" type="submit" id="go" style="margin:8px auto 0;max-width:100%">GET THE COMPLETE GUIDE FOR <span class="P"></span></button>
+    </form>
+  </div>
+
+  <div id="payBox" hidden style="text-align:center">
+    <h2 style="font-size:28px;margin-bottom:10px">YOU'RE ONE STEP AWAY FROM GETTING THE BOOK.</h2>
+    
+    <!-- Time-Sensitive Urgency Banner on Payment Screen -->
+    <div id="payUrgencyBox" style="background:#FFF9E6;border:2px solid #FFC400;border-radius:8px;padding:18px 20px;margin:18px auto 22px;max-width:540px;text-align:center;box-shadow:0 6px 20px rgba(255,196,0,0.18)">
+      <div style="display:inline-block;background:#FFC400;color:#000;font:800 12px Montserrat;padding:3px 10px;border-radius:3px;letter-spacing:1px;margin-bottom:6px">TIME-SENSITIVE LAUNCH PRICE RESERVED</div>
+      <div style="font-size:15px;font-weight:800;color:#000;margin-bottom:4px">Reserved Discount Amount: <span class="P" style="font-size:22px;color:#b00020"></span> <s class="R" style="color:#777;font-size:14.5px"></s></div>
+      <div id="payCountdownDisplay" style="font-family:Montserrat,sans-serif;font-weight:900;font-size:28px;color:#000;margin:8px 0;letter-spacing:1.5px">--:--:--</div>
+      <p style="font-size:13.5px;color:#222;margin:0;line-height:1.5" id="payUrgencyMsg">
+        <b>Urgency:</b> Complete your bank transfer and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R"></b>.
+      </p>
+    </div>
+
+    <p style="color:#555;font-size:14.5px">Your order is pending payment. You have not purchased yet. Transfer the exact amount below to lock in the launch price, then confirm on WhatsApp.</p>
+    
+    <div class="pay" style="margin:16px auto;text-align:left">
+      <dl>
+        <dt>Order reference</dt><dd id="oref"></dd>
+        <dt>Amount to pay (Launch Price)</dt><dd><span class="P" style="color:#000;font-weight:900"></span> <span style="font-size:13px;color:#b00020;font-weight:700" id="paySavingNote">(Save <i class="S" style="font-style:normal"></i> before deadline)</span></dd>
+        <dt>Bank</dt><dd id="bk"></dd>
+        <dt>Account name</dt><dd id="an"></dd>
+        <dt>Account number</dt><dd><span id="ac"></span> <button type="button" id="cp" class="btn dk" style="display:inline-block;width:auto;padding:6px 14px;font-size:13px;margin-left:8px">COPY</button></dd>
+        <dt>Payment reference</dt><dd id="pr"></dd>
+      </dl>
+    </div>
+    
+    <ol style="display:inline-block;text-align:left;max-width:520px;padding-left:24px;font-size:14.5px;line-height:1.6">
+      <li>Transfer the exact amount (<span class="P" style="font-weight:700"></span>) and use your order reference.</li>
+      <li>Tap the button below and send the prefilled WhatsApp message.</li>
+      <li>After your payment is verified, full access and all bonuses are sent to your email.</li>
+    </ol>
+    <a class="btn" id="wa" target="_blank" rel="noopener" style="margin:18px auto 0;max-width:100%">CONFIRM PAYMENT ON WHATSAPP</a>
+  </div>
+</div></section>
 
 <section id="faq-section">
   <div class="wrap" style="text-align:center;max-width:860px;margin:0 auto">
@@ -314,16 +374,112 @@ var CFG={price:5500,regular:12500,deadline:null,allocation:null,wa:"234805178016
 bank:{name:"Opay",account:"8120525609",holder:"Onifade Sulaiman Ipesola"},product:"STOP CHASING CLIENTS",
 delivery:"Access is sent to your email after your payment is verified."};
 var fmt=function(n){return "\u20A6"+n.toLocaleString("en-NG")},$=function(i){return document.getElementById(i)},all=function(s){return document.querySelectorAll(s)};
+function getDeadlineTimestamp(){
+  if (CFG.deadline) {
+    var t = new Date(CFG.deadline).getTime();
+    if (!isNaN(t) && t > 0) return t;
+  }
+  var saved = localStorage.getItem("scc_rolling_deadline");
+  if (saved && !isNaN(+saved) && +saved > Date.now()) return +saved;
+  var fallback = Date.now() + (48 * 3600 * 1000);
+  try { localStorage.setItem("scc_rolling_deadline", String(fallback)); } catch(x){}
+  return fallback;
+}
+
+function isOfferExpired(){
+  var dl = getDeadlineTimestamp();
+  return dl ? Date.now() >= dl : false;
+}
+
+function getActivePrice(){
+  return isOfferExpired() ? CFG.regular : CFG.price;
+}
+
 function renderPrices(){
-all(".P").forEach(function(e){e.textContent=fmt(CFG.price)});all(".R").forEach(function(e){e.textContent=fmt(CFG.regular)});all(".S").forEach(function(e){e.textContent=fmt(CFG.regular-CFG.price)});
-var bar="LAUNCH EDITION NOW AVAILABLE \u2022 GET THE COMPLETE GUIDE FOR "+fmt(CFG.price)+" INSTEAD OF "+fmt(CFG.regular);
-if(CFG.deadline)bar+=" \u2022 LAUNCH PRICE ENDS "+new Date(CFG.deadline).toLocaleDateString("en-NG",{day:"numeric",month:"long",year:"numeric"});
-if(CFG.allocation)bar+=" \u2022 LIMITED TO "+CFG.allocation+" COPIES";
-$("bar").textContent=bar;
-if(CFG.deadline){var t=function(){var d=new Date(CFG.deadline)-new Date();if(d<=0){$("cd").textContent="Launch period ended";return}var h=Math.floor(d/36e5);$("cd").textContent="Launch price ends in "+Math.floor(h/24)+"d "+h%24+"h "+Math.floor(d%36e5/6e4)+"m"};t();setInterval(t,3e4)}
+  var dl = getDeadlineTimestamp();
+  var diff = dl - Date.now();
+  var expired = diff <= 0;
+  var currentPrice = expired ? CFG.regular : CFG.price;
+
+  all(".P").forEach(function(e){ e.textContent = fmt(currentPrice); });
+  all(".R").forEach(function(e){ e.textContent = fmt(CFG.regular); });
+  all(".S").forEach(function(e){ e.textContent = fmt(Math.max(0, CFG.regular - currentPrice)); });
+
+  var pad = function(n){ return n < 10 ? "0" + n : String(n); };
+
+  if (!expired) {
+    var days = Math.floor(diff / (24 * 3600 * 1000));
+    var hours = Math.floor((diff % (24 * 3600 * 1000)) / (3600 * 1000));
+    var mins = Math.floor((diff % (3600 * 1000)) / (60 * 1000));
+    var secs = Math.floor((diff % (60 * 1000)) / 1000);
+
+    var timeStr = (days > 0 ? (days + "d ") : "") + pad(hours) + "h " + pad(mins) + "m " + pad(secs) + "s";
+
+    if ($("countdownDisplay")) {
+      $("countdownDisplay").textContent = timeStr;
+      $("countdownDisplay").style.color = "#000";
+    }
+    if ($("payCountdownDisplay")) {
+      $("payCountdownDisplay").textContent = timeStr;
+      $("payCountdownDisplay").style.color = "#000";
+    }
+    if ($("cdStatusTitle")) $("cdStatusTitle").textContent = "LAUNCH PRICE DEADLINE COUNTDOWN";
+    if ($("launchPriceLabel")) $("launchPriceLabel").textContent = "SPECIAL LAUNCH DISCOUNT";
+    if ($("priceTag")) {
+      $("priceTag").style.background = "var(--y)";
+      $("priceTag").style.color = "#000";
+      $("priceTag").innerHTML = 'SAVE <i class="S" style="font-style:normal">' + fmt(CFG.regular - CFG.price) + '</i> NOW';
+    }
+    if ($("cdNotice")) {
+      $("cdNotice").innerHTML = '<b>Urgency:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>. Lock in your discount today.';
+    }
+    if ($("payUrgencyMsg")) {
+      $("payUrgencyMsg").innerHTML = '<b>Urgent:</b> Complete your bank transfer of <b>' + fmt(CFG.price) + '</b> and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>.';
+    }
+    if ($("paySavingNote")) {
+      $("paySavingNote").innerHTML = '(Save <i class="S" style="font-style:normal">' + fmt(CFG.regular - CFG.price) + '</i> before deadline)';
+    }
+    if ($("bar")) {
+      $("bar").textContent = "🔥 LAUNCH DISCOUNT ACTIVE \u2022 GET IT FOR " + fmt(CFG.price) + " BEFORE PRICE RETURNS TO " + fmt(CFG.regular) + " \u2022 DEADLINE: " + timeStr;
+    }
+  } else {
+    var expiredStr = "00:00:00 (EXPIRED)";
+    if ($("countdownDisplay")) {
+      $("countdownDisplay").textContent = expiredStr;
+      $("countdownDisplay").style.color = "#b00020";
+    }
+    if ($("payCountdownDisplay")) {
+      $("payCountdownDisplay").textContent = expiredStr;
+      $("payCountdownDisplay").style.color = "#b00020";
+    }
+    if ($("cdStatusTitle")) $("cdStatusTitle").textContent = "LAUNCH DISCOUNT HAS ENDED";
+    if ($("launchPriceLabel")) $("launchPriceLabel").textContent = "CURRENT PRICE (REGULAR)";
+    if ($("priceTag")) {
+      $("priceTag").style.background = "#222";
+      $("priceTag").style.color = "#fff";
+      $("priceTag").textContent = "NORMAL PRICE IN EFFECT";
+    }
+    if ($("cdNotice")) {
+      $("cdNotice").innerHTML = '<b style="color:#b00020">Deadline Closed:</b> The special launch discount window has expired. The price has now returned back to the normal price of <b>' + fmt(CFG.regular) + '</b>.';
+    }
+    if ($("payUrgencyMsg")) {
+      $("payUrgencyMsg").innerHTML = '<b style="color:#b00020">Deadline Expired:</b> The launch discount window has closed. The price has returned back to the normal price of <b>' + fmt(CFG.regular) + '</b>. Please transfer ' + fmt(CFG.regular) + ' to complete your order.';
+    }
+    if ($("paySavingNote")) {
+      $("paySavingNote").textContent = "(Standard Regular Price)";
+    }
+    if ($("bar")) {
+      $("bar").textContent = "LAUNCH PERIOD ENDED \u2022 COMPLETE GUIDE IS AVAILABLE AT THE REGULAR PRICE OF " + fmt(CFG.regular);
+    }
+  }
+
+  if (!busy && $("go")) {
+    $("go").textContent = "GET THE COMPLETE GUIDE FOR " + fmt(currentPrice);
+  }
 }
 renderPrices();
-fetch("/api/config").then(function(r){return r.ok?r.json():null}).then(function(c){if(c){Object.assign(CFG,c);renderPrices();if($("bk"))$("bk").textContent=CFG.bank.name;if($("an"))$("an").textContent=CFG.bank.holder;if($("ac"))$("ac").textContent=CFG.bank.account;}}).catch(function(){});
+setInterval(renderPrices, 1000);
+fetch("/api/config?t=" + Date.now()).then(function(r){return r.ok?r.json():null}).then(function(c){if(c){Object.assign(CFG,c);renderPrices();if($("bk"))$("bk").textContent=CFG.bank.name;if($("an"))$("an").textContent=CFG.bank.holder;if($("ac"))$("ac").textContent=CFG.bank.account;}}).catch(function(){});
 var prob=["I am good at what I do, but clients still negotiate everything.","I keep posting but serious prospects rarely reach out.","I send DMs and proposals but most people disappear.","People ask for my price before understanding my value.","I keep getting clients who want more work for less money.","I don't know how to position myself differently from everyone else.","I have the skill. I just don't know how to consistently attract the right people."];
 $("prob").innerHTML=prob.map(function(x){return '<div class="q">"'+x+'"</div>'}).join("");
 var sys=[["C","Clarify Your Ideal Client","Decide exactly who you serve and who you do not."],["L","Locate the Real Problem","Find what clients actually struggle with, in their words."],["A","Articulate Your Value","Explain the outcome you create, not just the task you perform."],["R","Reposition Yourself","Give the right people a clear reason to choose you."],["I","Increase Your Authority","Show your expertise through useful content and proof."],["T","Turn Attention Into Trust","Move interested people to confident people."],["Y","Yield Qualified Clients","Qualify, convert and keep the right clients."]];
@@ -391,13 +547,14 @@ $("en").textContent=n.length<2?(ok=false,"Please enter your full name."):"";$("e
 if(!ok)return;busy=true;$("go").textContent="PLEASE WAIT...";
 var ref="SCC-"+Date.now().toString(36).toUpperCase();
 $("oref").textContent=ref;$("pr").textContent=ref;$("bk").textContent=CFG.bank.name;$("an").textContent=CFG.bank.holder;$("ac").textContent=CFG.bank.account;
-var msg="Hello Mr. Clarity,\n\nI have made payment for the "+CFG.product+" ebook.\n\nName: "+n+"\nEmail: "+e+"\nPhone: "+p+"\nAmount: "+fmt(CFG.price)+"\nOrder: "+ref+"\n\nPlease confirm my payment and send my access.";
+var currentOrderPrice = getActivePrice();
+var msg="Hello Mr. Clarity,\n\nI have made payment for the "+CFG.product+" ebook.\n\nName: "+n+"\nEmail: "+e+"\nPhone: "+p+"\nAmount: "+fmt(currentOrderPrice)+"\nOrder: "+ref+"\n\nPlease confirm my payment and send my access.";
 $("wa").href="https://wa.me/"+CFG.wa+"?text="+encodeURIComponent(msg);
-save("scc_orders",function(a){a.push({id:ref,name:n,email:e,phone:p,amount:CFG.price,status:"PENDING_PAYMENT",created:Date.now(),confirmed:null,src:LT.utm_source||"direct",fsrc:FT.utm_source||"direct",camp:LT.utm_campaign||"",content:LT.utm_content||"",dev:dev,wa:false,hear:$("s").value})});
-track("lead",{content_name:CFG.product,value:CFG.price,order_id:ref});
-track("checkout",{content_name:CFG.product,value:CFG.price,order_id:ref});
+save("scc_orders",function(a){a.push({id:ref,name:n,email:e,phone:p,amount:currentOrderPrice,status:"PENDING_PAYMENT",created:Date.now(),confirmed:null,src:LT.utm_source||"direct",fsrc:FT.utm_source||"direct",camp:LT.utm_campaign||"",content:LT.utm_content||"",dev:dev,wa:false,hear:$("s").value})});
+track("lead",{content_name:CFG.product,value:currentOrderPrice,order_id:ref});
+track("checkout",{content_name:CFG.product,value:currentOrderPrice,order_id:ref});
 track("payment_submitted",{order_id:ref});
-fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:ref,name:n,email:e,phone:p,hear:$("s").value,src:LT.utm_source||"direct",fsrc:FT.utm_source||"direct",lt:LT,ft:FT,dev:dev,referrer:document.referrer,landing:location.pathname,time_on_page:getTimeSpentSecs(),consent:true})}).catch(function(){});
+fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:ref,name:n,email:e,phone:p,amount:currentOrderPrice,hear:$("s").value,src:LT.utm_source||"direct",fsrc:FT.utm_source||"direct",lt:LT,ft:FT,dev:dev,referrer:document.referrer,landing:location.pathname,time_on_page:getTimeSpentSecs(),consent:true})}).catch(function(){});
 $("wa").addEventListener("click",function(){track("wa",{order_id:ref});fetch("/api/wa",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:ref})}).catch(function(){});save("scc_orders",function(a){a.forEach(function(o){if(o.id==ref){o.wa=true;if(o.status=="PENDING_PAYMENT")o.status="PAYMENT_REPORTED"}})})});
 $("formBox").hidden=true;$("payBox").hidden=false;$("box").scrollIntoView({behavior:"smooth",block:"start"})});
 $("cp").addEventListener("click",function(){var b=this;(navigator.clipboard?navigator.clipboard.writeText(CFG.bank.account):Promise.reject()).then(function(){b.textContent="COPIED"},function(){b.textContent="SELECT AND COPY"})});

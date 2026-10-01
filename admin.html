@@ -256,8 +256,20 @@ body.in #lg{display:none}
           <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Account Number</label><input id="cfgBankAccount" required style="width:100%"></div>
           <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Account Holder Name</label><input id="cfgBankHolder" required style="width:100%"></div>
           <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">WhatsApp Number (e.g. 2348051780169)</label><input id="cfgWa" required style="width:100%"></div>
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Launch Deadline (optional)</label><input id="cfgDeadline" type="date" style="width:100%"></div>
-          <div><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Copies Allocation (optional)</label><input id="cfgAllocation" type="number" style="width:100%"></div>
+          <div style="grid-column:1/-1">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;flex-wrap:wrap;gap:4px">
+              <label style="font-size:12px;font-weight:700">Launch Price Deadline (Live Countdown on Landing &amp; Payment)</label>
+              <div style="display:flex;gap:4px">
+                <button type="button" id="btnDl24h" class="l" style="font-size:11px;padding:2px 6px">+24h</button>
+                <button type="button" id="btnDl48h" class="l" style="font-size:11px;padding:2px 6px">+48h</button>
+                <button type="button" id="btnDl3d" class="l" style="font-size:11px;padding:2px 6px">+3 Days</button>
+                <button type="button" id="btnDlClear" class="l" style="font-size:11px;padding:2px 6px">Clear</button>
+              </div>
+            </div>
+            <input id="cfgDeadline" type="datetime-local" style="width:100%">
+            <small style="color:var(--g);display:block;margin-top:2px">Controls the live countdown on landing page &amp; payment instructions. When expired, price returns to normal price.</small>
+          </div>
+          <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:700;display:block;margin-bottom:3px">Copies Allocation (optional)</label><input id="cfgAllocation" type="number" style="width:100%"></div>
           <div style="grid-column:1/-1;margin-top:6px">
             <button type="submit" style="padding:10px 18px">Save Offer &amp; Bank Details</button>
           </div>
@@ -582,7 +594,23 @@ function populateSettings(cfg){
   if (document.activeElement !== $("cfgBankAccount")) $("cfgBankAccount").value = (cfg.bank && cfg.bank.account) || "";
   if (document.activeElement !== $("cfgBankHolder")) $("cfgBankHolder").value = (cfg.bank && cfg.bank.holder) || "";
   if (document.activeElement !== $("cfgWa")) $("cfgWa").value = cfg.wa || "";
-  if (document.activeElement !== $("cfgDeadline")) $("cfgDeadline").value = cfg.deadline ? String(cfg.deadline).slice(0, 10) : "";
+  if (document.activeElement !== $("cfgDeadline")) {
+    if (cfg.deadline) {
+      try {
+        var d = new Date(cfg.deadline);
+        if (!isNaN(d.getTime())) {
+          var pad = function(n){ return n < 10 ? "0" + n : String(n); };
+          $("cfgDeadline").value = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+        } else {
+          $("cfgDeadline").value = String(cfg.deadline).slice(0, 16);
+        }
+      } catch(x){
+        $("cfgDeadline").value = String(cfg.deadline).slice(0, 16);
+      }
+    } else {
+      $("cfgDeadline").value = "";
+    }
+  }
   if (document.activeElement !== $("cfgAllocation")) $("cfgAllocation").value = cfg.allocation || "";
 
   if (document.activeElement !== $("cfgMetaPixel")) $("cfgMetaPixel").value = cfg.meta_pixel_id || "";
@@ -677,6 +705,21 @@ $("tbodyLeads").addEventListener("change", async function(e){
 ["qLeads", "fltLeadStatus"].forEach(function(id){
   $(id).addEventListener("input", renderLeadsTable);
 });
+
+// Deadline Quick Presets
+function setDeadlineOffset(hours){
+  var d = new Date(Date.now() + (hours * 3600 * 1000));
+  var pad = function(n){ return n < 10 ? "0" + n : String(n); };
+  $("cfgDeadline").value = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  flash("Deadline set to " + d.toLocaleString("en-NG") + ". Click 'Save Offer & Bank Details' to apply!", false);
+}
+$("btnDl24h").onclick = function(){ setDeadlineOffset(24); };
+$("btnDl48h").onclick = function(){ setDeadlineOffset(48); };
+$("btnDl3d").onclick = function(){ setDeadlineOffset(72); };
+$("btnDlClear").onclick = function(){
+  $("cfgDeadline").value = "";
+  flash("Deadline cleared. Click 'Save Offer & Bank Details' to apply!", false);
+};
 
 // Offer & Bank Settings Save
 $("cfgForm").addEventListener("submit", async function(e){
