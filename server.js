@@ -169,18 +169,23 @@ const sha = v => crypto.createHash("sha256").update(v).digest("hex");
 const metaConfig = () => {
   const cfg = db.config || {};
   return {
-    id: E.META_DATASET_ID || E.META_PIXEL_ID || cfg.meta_dataset_id || cfg.meta_pixel_id,
-    token: E.META_ACCESS_TOKEN || cfg.meta_access_token,
-    version: E.META_API_VERSION || cfg.meta_api_version || "v21.0",
-    pixel_code: (cfg.meta_pixel_code || E.META_PIXEL_CODE || "").trim()
+    id: String(cfg.meta_pixel_id || cfg.meta_dataset_id || E.META_DATASET_ID || E.META_PIXEL_ID || "").trim(),
+    token: String(cfg.meta_access_token || E.META_ACCESS_TOKEN || "").trim(),
+    version: String(cfg.meta_api_version || E.META_API_VERSION || "v21.0").trim(),
+    pixel_code: String(cfg.meta_pixel_code || E.META_PIXEL_CODE || "").trim()
   };
 };
 
 const pixel = () => {
   const mc = metaConfig();
   // Support custom raw Meta Pixel Code pasted in admin
-  if (mc.pixel_code && mc.pixel_code.includes("<script")) {
-    return mc.pixel_code;
+  if (mc.pixel_code) {
+    if (mc.pixel_code.includes("<script")) {
+      return mc.pixel_code;
+    }
+    if (mc.pixel_code.includes("fbq") || mc.pixel_code.includes("fbevents")) {
+      return `<script>${mc.pixel_code}</script>`;
+    }
   }
   if (!mc.id) return "";
   const cleanId = String(mc.id).replace(/\D/g, "");
@@ -257,13 +262,22 @@ const handler = async (req, res) => {
     if ((m === "GET" || m === "HEAD") && (u === "/" || u === "/index.html")) {
       let h = loadHtml("index.html");
       h = h.replace("<!--PIXEL-->", pixel());
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      });
       return res.end(m === "HEAD" ? "" : h);
     }
 
     if ((m === "GET" || m === "HEAD") && (u === "/admin" || u === "/admin.html")) {
       const h = loadHtml("admin.html");
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      });
       return res.end(m === "HEAD" ? "" : h);
     }
 
@@ -271,7 +285,11 @@ const handler = async (req, res) => {
     if (m === "GET" && u === "/api/config") {
       const cfg = Object.assign({}, db.config || DEFAULT_CONFIG);
       delete cfg.meta_access_token;
-      return send(res, 200, cfg);
+      return send(res, 200, cfg, {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      });
     }
 
     // Funnel, activity & time on page tracking endpoint
@@ -458,9 +476,9 @@ const handler = async (req, res) => {
         if (b.meta_dataset_id !== undefined) db.config.meta_dataset_id = clip(b.meta_dataset_id, 50);
         if (b.meta_access_token !== undefined) db.config.meta_access_token = clip(b.meta_access_token, 300);
         if (b.meta_api_version !== undefined) db.config.meta_api_version = clip(b.meta_api_version, 20);
-        if (b.meta_pixel_code !== undefined) db.config.meta_pixel_code = String(b.meta_pixel_code).trim().slice(0, 5000);
+        if (b.meta_pixel_code !== undefined) db.config.meta_pixel_code = String(b.meta_pixel_code).trim().slice(0, 20000);
         if (b.delivery) db.config.delivery = clip(b.delivery, 255);
-        save();
+        flush();
         return send(res, 200, { ok: 1, config: db.config });
       }
 
