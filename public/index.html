@@ -266,7 +266,7 @@ section+section{content-visibility:auto;contain-intrinsic-size:auto 640px}img{ma
     <div style="font:700 12px Montserrat;color:#995B00;letter-spacing:1px;text-transform:uppercase" id="cdStatusTitle">LAUNCH PRICE DEADLINE COUNTDOWN</div>
     <div id="countdownDisplay" style="font-family:Montserrat,sans-serif;font-weight:900;font-size:28px;color:#000;margin:8px 0;letter-spacing:1px">--:--:--</div>
     <p id="cdNotice" style="font-size:13px;color:#444;margin:0;line-height:1.4">
-      <b>Urgency:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R"></b>. Lock in your discount today.
+      <b>Please note:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R"></b>. Lock in your discount today.
     </p>
   </div>
 
@@ -276,7 +276,7 @@ section+section{content-visibility:auto;contain-intrinsic-size:auto 640px}img{ma
 <div style="background:#fff;color:#000;padding:32px 24px;margin:24px auto 0;max-width:600px;text-align:left;border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,0.5)" id="box">
   <div id="formBox" style="text-align:center">
     <h3 style="font-size:22px">Reserve your copy</h3>
-    <div id="formUrgencyBanner" style="background:#FFF9E6;border-left:4px solid #FFC400;padding:12px 16px;border-radius:4px;margin-bottom:18px;font-size:13.5px;color:#333;text-align:left;line-height:1.45">
+    <div id="formNoticeBanner" style="background:#FFF9E6;border-left:4px solid #FFC400;padding:12px 16px;border-radius:4px;margin-bottom:18px;font-size:13.5px;color:#333;text-align:left;line-height:1.45">
       <b style="color:#995B00">⚡ Launch Window Active:</b> Lock in your discounted launch price of <b><span class="P"></span></b> now. Once the deadline countdown reaches zero, the price increases back to the normal price of <b><span class="R"></span></b>.
     </div>
     <p style="font-size:14px;color:#555;margin-bottom:20px">Enter your details, then pay by bank transfer. Your access is sent after your payment is confirmed.</p>
@@ -293,13 +293,13 @@ section+section{content-visibility:auto;contain-intrinsic-size:auto 640px}img{ma
   <div id="payBox" hidden style="text-align:center">
     <h2 style="font-size:28px;margin-bottom:10px">YOU'RE ONE STEP AWAY FROM GETTING THE BOOK.</h2>
     
-    <!-- Time-Sensitive Urgency Banner on Payment Screen -->
-    <div id="payUrgencyBox" style="background:#FFF9E6;border:2px solid #FFC400;border-radius:8px;padding:18px 20px;margin:18px auto 22px;max-width:540px;text-align:center;box-shadow:0 6px 20px rgba(255,196,0,0.18)">
+    <!-- Time-Sensitive Notice Banner on Payment Screen -->
+    <div id="payNoticeBox" style="background:#FFF9E6;border:2px solid #FFC400;border-radius:8px;padding:18px 20px;margin:18px auto 22px;max-width:540px;text-align:center;box-shadow:0 6px 20px rgba(255,196,0,0.18)">
       <div style="display:inline-block;background:#FFC400;color:#000;font:800 12px Montserrat;padding:3px 10px;border-radius:3px;letter-spacing:1px;margin-bottom:6px">TIME-SENSITIVE LAUNCH PRICE RESERVED</div>
       <div style="font-size:15px;font-weight:800;color:#000;margin-bottom:4px">Reserved Discount Amount: <span class="P" style="font-size:22px;color:#b00020"></span> <s class="R" style="color:#777;font-size:14.5px"></s></div>
       <div id="payCountdownDisplay" style="font-family:Montserrat,sans-serif;font-weight:900;font-size:28px;color:#000;margin:8px 0;letter-spacing:1.5px">--:--:--</div>
-      <p style="font-size:13.5px;color:#222;margin:0;line-height:1.5" id="payUrgencyMsg">
-        <b>Urgency:</b> Complete your bank transfer and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R"></b>.
+      <p style="font-size:13.5px;color:#222;margin:0;line-height:1.5" id="payNoticeMsg">
+        <b>Please note:</b> Complete your bank transfer and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R"></b>.
       </p>
     </div>
 
@@ -431,10 +431,10 @@ function renderPrices(){
       $("priceTag").innerHTML = 'SAVE <i class="S" style="font-style:normal">' + fmt(CFG.regular - CFG.price) + '</i> NOW';
     }
     if ($("cdNotice")) {
-      $("cdNotice").innerHTML = '<b>Urgency:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>. Lock in your discount today.';
+      $("cdNotice").innerHTML = '<b>Please note:</b> Once this countdown ends, the launch discount expires and the price returns to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>. Lock in your discount today.';
     }
-    if ($("payUrgencyMsg")) {
-      $("payUrgencyMsg").innerHTML = '<b>Urgent:</b> Complete your bank transfer of <b>' + fmt(CFG.price) + '</b> and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>.';
+    if ($("payNoticeMsg")) {
+      $("payNoticeMsg").innerHTML = '<b>Please note:</b> Complete your bank transfer of <b>' + fmt(CFG.price) + '</b> and confirm on WhatsApp before this timer expires. After the deadline, your launch reservation expires and the price returns back to the normal price of <b class="R">' + fmt(CFG.regular) + '</b>.';
     }
     if ($("paySavingNote")) {
       $("paySavingNote").innerHTML = '(Save <i class="S" style="font-style:normal">' + fmt(CFG.regular - CFG.price) + '</i> before deadline)';
@@ -462,8 +462,8 @@ function renderPrices(){
     if ($("cdNotice")) {
       $("cdNotice").innerHTML = '<b style="color:#b00020">Deadline Closed:</b> The special launch discount window has expired. The price has now returned back to the normal price of <b>' + fmt(CFG.regular) + '</b>.';
     }
-    if ($("payUrgencyMsg")) {
-      $("payUrgencyMsg").innerHTML = '<b style="color:#b00020">Deadline Expired:</b> The launch discount window has closed. The price has returned back to the normal price of <b>' + fmt(CFG.regular) + '</b>. Please transfer ' + fmt(CFG.regular) + ' to complete your order.';
+    if ($("payNoticeMsg")) {
+      $("payNoticeMsg").innerHTML = '<b style="color:#b00020">Deadline Expired:</b> The launch discount window has closed. The price has returned back to the normal price of <b>' + fmt(CFG.regular) + '</b>. Please transfer ' + fmt(CFG.regular) + ' to complete your order.';
     }
     if ($("paySavingNote")) {
       $("paySavingNote").textContent = "(Standard Regular Price)";
