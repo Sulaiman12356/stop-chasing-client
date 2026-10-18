@@ -60,40 +60,50 @@ footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px s
 <main>
   <div class="card" id="selectionCard">
     <div class="eyebrow">Onboarding Step 2 of 2</div>
-    <h1>ARE YOU READY TO GET YOUR COPY OF STOP CHASING CLIENTS?</h1>
-    <p class="lead">The launch offer gives you access to the ebook and its practical client-attraction resources. Choose the option that best describes your decision.</p>
+    <h1>ARE YOU READY TO GET YOUR COPY OF STOP CHASING CLIENTS FOR JUST ₦5,500 AT PRE LAUNCH DISCOUNT PRICE?</h1>
+    
+    <div style="background:#FFFDF0;border:2px solid var(--y);border-radius:6px;padding:14px 18px;margin:16px 0 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="background:#000;color:var(--y);font:800 11px Montserrat;padding:3px 8px;border-radius:3px;letter-spacing:1px">PRE-LAUNCH SPECIAL</span>
+        <span style="font:900 24px Montserrat;color:#000">₦5,500</span>
+        <span style="font:700 15px Montserrat;color:#888;text-decoration:line-through">₦12,500</span>
+      </div>
+      <span style="background:var(--y);color:#000;font:800 11.5px Montserrat;padding:4px 10px;border-radius:3px">SAVE ₦7,000 (56% OFF)</span>
+    </div>
+
+    <p class="lead">The launch offer gives you access to the ebook and its practical client-attraction resources for just ₦5,500. Choose the option that best describes your decision to explore the details.</p>
 
     <div class="intent-list" id="intentList">
-      <!-- OPTION 1 -->
+      <!-- READY NOW -->
       <div class="opt-card" data-val="READY_NOW">
         <div class="opt-radio"></div>
         <div class="opt-content">
           <div class="opt-title">
-            <span>OPTION 1: YES, I'M READY NOW</span>
-            <span class="opt-tag">Special Launch Price</span>
+            <span>YES, I'M READY NOW</span>
+            <span class="opt-tag">Pre-Launch ₦5,500</span>
           </div>
-          <p class="opt-desc">I'm ready to get the book at the current launch price.</p>
+          <p class="opt-desc">I'm ready to get the book at the current ₦5,500 launch price.</p>
         </div>
       </div>
 
-      <!-- OPTION 2 -->
+      <!-- NO, I'M NOT READY NOW, BUT I'LL GET IT LATER -->
       <div class="opt-card" data-val="BUY_LATER">
         <div class="opt-radio"></div>
         <div class="opt-content">
           <div class="opt-title">
-            <span>OPTION 2: NO, I'M NOT READY NOW, BUT I'LL GET IT LATER</span>
+            <span>NO, I'M NOT READY NOW, BUT I'LL GET IT LATER</span>
             <span class="opt-tag">Explore First</span>
           </div>
           <p class="opt-desc">I'd like to explore the offer and consider it later.</p>
         </div>
       </div>
 
-      <!-- OPTION 3 -->
+      <!-- I'M NOT SURE IF I CAN GET IT -->
       <div class="opt-card" data-val="NOT_SURE">
         <div class="opt-radio"></div>
         <div class="opt-content">
           <div class="opt-title">
-            <span>OPTION 3: I'M NOT SURE IF I CAN GET IT</span>
+            <span>I'M NOT SURE IF I CAN GET IT</span>
             <span class="opt-tag">Learn More</span>
           </div>
           <p class="opt-desc">I need more time to decide whether this is right for me.</p>
@@ -102,7 +112,7 @@ footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px s
     </div>
 
     <div class="err" id="errSelect"></div>
-    <button type="button" class="btn" id="btnContinue">CONTINUE</button>
+    <button type="button" class="btn" id="btnContinue">CONTINUE TO BOOK DETAILS &rarr;</button>
   </div>
 
   <!-- Feedback screen for Option 2 & 3 -->
@@ -183,24 +193,16 @@ $("btnContinue").addEventListener("click", async function(){
       }
     } catch (e) {}
 
-    // Handle each choice
-    if (selectedOption === "READY_NOW") {
-      // Direct immediately to checkout page
-      var query = window.location.search ? window.location.search : (leadId ? "?lead_id=" + encodeURIComponent(leadId) : "");
-      window.location.href = "/checkout" + query;
-    } else if (selectedOption === "BUY_LATER") {
-      $("selectionCard").style.display = "none";
-      $("feedbackTitle").textContent = "No Problem at All";
-      $("feedbackText").textContent = "No problem. You can explore the book and return when you're ready. We've saved your details so you can continue your journey later.";
-      $("btnExplore").textContent = "EXPLORE THE BOOK & SPECIAL OFFER";
-      $("feedbackCard").style.display = "block";
-    } else if (selectedOption === "NOT_SURE") {
-      $("selectionCard").style.display = "none";
-      $("feedbackTitle").textContent = "Take Your Time";
-      $("feedbackText").textContent = "That's completely fine. Take your time to understand what the book offers and decide whether it meets your needs.";
-      $("btnExplore").textContent = "READ ABOUT THE BOOK";
-      $("feedbackCard").style.display = "block";
-    }
+    // Irrespective of option chosen, lead to the landing page directly first to read the content!
+    var targetQuery = "?skip_intro=1" + (leadId ? "&lead_id=" + encodeURIComponent(leadId) : "") + "&intent=" + encodeURIComponent(selectedOption);
+    
+    btn.textContent = "CHOICE SAVED! OPENING SALES PAGE...";
+    btn.style.background = "#2e7d32";
+    btn.style.color = "#fff";
+
+    setTimeout(function(){
+      window.location.href = "/" + targetQuery;
+    }, 400);
 
   } catch (err) {
     $("errSelect").textContent = "An error occurred. Proceeding to explore the book...";

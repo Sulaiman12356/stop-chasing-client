@@ -65,23 +65,32 @@ footer a{color:#444;text-decoration:underline}
     <h1>BEFORE YOU EXPLORE THE BOOK, LET'S GET TO KNOW YOU.</h1>
     <p class="lead">Discover a practical approach to positioning your skills, building trust, and attracting clients who value your work. Enter your details below to continue.</p>
 
-    <form id="introForm" novalidate>
+    <!-- Auto-fill Quick Bar -->
+    <div style="background:#FFFDF0;border:1.5px dashed #cca000;border-radius:6px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px" id="autofillBar">
+      <div style="display:flex;align-items:center;gap:8px;color:#333">
+        <span style="font-size:16px">⚡</span>
+        <span><b>Fast Auto-Fill:</b> Browser autofill supported or tap button to pre-fill</span>
+      </div>
+      <button type="button" id="btnQuickAutofill" style="background:#000;color:var(--y);border:none;padding:6px 12px;font:800 11px Montserrat;border-radius:4px;cursor:pointer;white-space:nowrap;letter-spacing:.5px">1-TAP AUTO-FILL</button>
+    </div>
+
+    <form id="introForm" autocomplete="on" novalidate>
       <div class="form-group">
         <label for="fullName">Full Name <span class="req">*</span></label>
-        <input type="text" id="fullName" name="name" autocomplete="name" placeholder="e.g. Tunde Adeyemi" required>
+        <input type="text" id="fullName" name="name" autocomplete="name" autocapitalize="words" placeholder="e.g. Tunde Adeyemi" required autofocus>
         <div class="err" id="errName"></div>
       </div>
 
       <div class="form-group">
         <label for="emailAddr">Email Address <span class="req">*</span></label>
-        <input type="email" id="emailAddr" name="email" autocomplete="email" placeholder="e.g. tunde@example.com" required>
+        <input type="email" id="emailAddr" name="email" autocomplete="email" inputmode="email" placeholder="e.g. tunde@example.com" required>
         <div class="hint">Your digital ebook access and resources will be sent here.</div>
         <div class="err" id="errEmail"></div>
       </div>
 
       <div class="form-group">
         <label for="phoneNum">WhatsApp Phone Number <span class="req">*</span></label>
-        <input type="tel" id="phoneNum" name="phone" autocomplete="tel" placeholder="e.g. 08012345678 or +2348012345678" required>
+        <input type="tel" id="phoneNum" name="phone" autocomplete="tel" inputmode="tel" placeholder="e.g. 08012345678 or +2348012345678" required>
         <div class="hint">Accepts Nigerian and international mobile numbers.</div>
         <div class="err" id="errPhone"></div>
       </div>
@@ -160,15 +169,86 @@ var utmData = {
   dev: /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop"
 };
 
-// Check for existing saved lead to prefill
-try {
-  var saved = JSON.parse(localStorage.getItem("scc_lead") || "null");
-  if (saved && typeof saved === "object") {
-    if (saved.name) $("fullName").value = saved.name;
-    if (saved.email) $("emailAddr").value = saved.email;
-    if (saved.phone) $("phoneNum").value = saved.phone;
+// Check for existing saved lead, query params, or draft to auto-fill
+(function autoFillInitialData(){
+  try {
+    // 1. Check URL parameters (?name=...&email=...&phone=... or ?full_name=...&whatsapp=...)
+    var qName = sp.get("name") || sp.get("full_name") || sp.get("fname") || "";
+    var qEmail = sp.get("email") || "";
+    var qPhone = sp.get("phone") || sp.get("whatsapp") || sp.get("tel") || "";
+    if (qName) $("fullName").value = qName;
+    if (qEmail) $("emailAddr").value = qEmail;
+    if (qPhone) $("phoneNum").value = qPhone;
+
+    // 2. Check saved lead from previous visits
+    var saved = JSON.parse(localStorage.getItem("scc_lead") || "null");
+    if (saved && typeof saved === "object") {
+      if (!$("fullName").value && saved.name) $("fullName").value = saved.name;
+      if (!$("emailAddr").value && saved.email) $("emailAddr").value = saved.email;
+      if (!$("phoneNum").value && saved.phone) $("phoneNum").value = saved.phone;
+    }
+
+    // 3. Check unsaved typed draft
+    var draft = JSON.parse(localStorage.getItem("scc_intro_draft") || "null");
+    if (draft && typeof draft === "object") {
+      if (!$("fullName").value && draft.name) $("fullName").value = draft.name;
+      if (!$("emailAddr").value && draft.email) $("emailAddr").value = draft.email;
+      if (!$("phoneNum").value && draft.phone) $("phoneNum").value = draft.phone;
+      if (draft.consent) $("consentChk").checked = true;
+    }
+  } catch (e) {}
+})();
+
+// Auto-save typing into draft so no data is ever lost on accidental reload
+["fullName", "emailAddr", "phoneNum"].forEach(function(id){
+  var el = $(id);
+  if (el) {
+    el.addEventListener("input", function(){
+      try {
+        localStorage.setItem("scc_intro_draft", JSON.stringify({
+          name: $("fullName").value,
+          email: $("emailAddr").value,
+          phone: $("phoneNum").value,
+          consent: $("consentChk").checked
+        }));
+      } catch(e){}
+    });
   }
-} catch (e) {}
+});
+$("consentChk").addEventListener("change", function(){
+  try {
+    var d = JSON.parse(localStorage.getItem("scc_intro_draft") || "{}");
+    d.consent = $("consentChk").checked;
+    localStorage.setItem("scc_intro_draft", JSON.stringify(d));
+  } catch(e){}
+});
+
+// 1-Tap Quick Auto-fill button handler
+$("btnQuickAutofill").addEventListener("click", function(){
+  // Check if saved lead or draft exists, else provide instant quick details
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem("scc_lead") || localStorage.getItem("scc_intro_draft") || "null"); } catch(e){}
+  
+  if (saved && saved.name && saved.email && saved.phone) {
+    $("fullName").value = saved.name;
+    $("emailAddr").value = saved.email;
+    $("phoneNum").value = saved.phone;
+  } else {
+    // Fill quick details to eliminate filling time
+    if (!$("fullName").value) $("fullName").value = "Tunde Adeyemi";
+    if (!$("emailAddr").value) $("emailAddr").value = "tunde.adeyemi@gmail.com";
+    if (!$("phoneNum").value) $("phoneNum").value = "+2348051780169";
+  }
+  $("consentChk").checked = true;
+  $("errName").textContent = "";
+  $("errEmail").textContent = "";
+  $("errPhone").textContent = "";
+  $("errConsent").textContent = "";
+  $("btnQuickAutofill").textContent = "✓ AUTO-FILLED";
+  $("btnQuickAutofill").style.background = "#2e7d32";
+  $("btnQuickAutofill").style.color = "#fff";
+  $("btnSubmit").focus();
+});
 
 // Track LeadFormViewed
 try {
