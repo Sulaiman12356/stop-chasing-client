@@ -68,6 +68,10 @@ footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px s
         <span class="tag">ORDER RESERVATION</span>
         <div style="font-size:14px;font-weight:700;color:#000">Order Reference: <span id="dispRef" style="font-family:monospace;font-size:16px;color:#b00020">GENERATING...</span></div>
         <div style="font-size:13px;color:#555;margin-top:4px">Reserved for: <b id="dispCustomer">-</b> (<span id="dispEmail">-</span>)</div>
+        <div style="font-size:12.5px;color:#995B00;font-weight:700;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>⚡ 10-Minute Launch Price Reservation:</span>
+          <span id="checkoutTimer" style="font-family:monospace;font-size:14px;background:#FFC400;color:#000;padding:2px 8px;border-radius:3px;font-weight:900">10:00</span>
+        </div>
       </div>
 
       <div class="order-summary">
@@ -192,6 +196,35 @@ function updateDisplay(){
   $("linkCheckStatus").href = "/payment-status?ref=" + encodeURIComponent(orderRef);
 }
 updateDisplay();
+
+// 10-Minute Launch Reservation Timer
+var TEN_MINUTES_MS = 10 * 60 * 1000;
+function getCheckoutDeadline(){
+  var saved = localStorage.getItem("scc_10min_deadline");
+  var now = Date.now();
+  if (saved && !isNaN(+saved)) {
+    var diff = +saved - now;
+    if (diff > 0 && diff <= TEN_MINUTES_MS) return +saved;
+  }
+  var dl = now + TEN_MINUTES_MS;
+  try { localStorage.setItem("scc_10min_deadline", String(dl)); } catch(e){}
+  return dl;
+}
+
+function updateCheckoutTimer(){
+  var diff = getCheckoutDeadline() - Date.now();
+  if (diff <= 0) {
+    var newDl = Date.now() + TEN_MINUTES_MS;
+    try { localStorage.setItem("scc_10min_deadline", String(newDl)); } catch(e){}
+    diff = newDl - Date.now();
+  }
+  var mins = Math.floor(diff / (60 * 1000));
+  var secs = Math.floor((diff % (60 * 1000)) / 1000);
+  var pad = function(n){ return n < 10 ? "0" + n : String(n); };
+  if ($("checkoutTimer")) $("checkoutTimer").textContent = pad(mins) + ":" + pad(secs);
+}
+updateCheckoutTimer();
+setInterval(updateCheckoutTimer, 1000);
 
 // Save order to server if not saved yet
 var orderCreated = false;

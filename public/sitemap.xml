@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://ais-pre-q6f4iqq2meclo7xvfuoi7g-111725295838.europe-west2.run.app/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://onifadesulaimanportfolio.vercel.app/images/og-ebook-stop-chasing-clients.png</image:loc>
+      <image:title>STOP CHASING CLIENTS Ebook Cover by Onifade Sulaiman (Mr. Clarity)</image:title>
+      <image:caption>The practical client-attraction system for freelancers and service providers</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://ais-pre-q6f4iqq2meclo7xvfuoi7g-111725295838.europe-west2.run.app/checkout</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

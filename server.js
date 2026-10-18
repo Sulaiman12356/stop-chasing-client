@@ -259,6 +259,22 @@ const handler = async (req, res) => {
   try {
     if ((m === "GET" || m === "HEAD") && u === "/healthz") return send(res, 200, { ok: 1 });
 
+    if ((m === "GET" || m === "HEAD") && u === "/robots.txt") {
+      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+      const txt = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: https://ais-pre-q6f4iqq2meclo7xvfuoi7g-111725295838.europe-west2.run.app/sitemap.xml\n";
+      return res.end(txt);
+    }
+
+    if ((m === "GET" || m === "HEAD") && u === "/sitemap.xml") {
+      res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" });
+      try {
+        const sitemapContent = fs.readFileSync(path.join(__dirname, "sitemap.xml"), "utf8");
+        return res.end(sitemapContent);
+      } catch(e) {
+        return res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://ais-pre-q6f4iqq2meclo7xvfuoi7g-111725295838.europe-west2.run.app/</loc><changefreq>daily</changefreq><priority>1.0</priority></url><url><loc>https://ais-pre-q6f4iqq2meclo7xvfuoi7g-111725295838.europe-west2.run.app/checkout</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>`);
+      }
+    }
+
     if ((m === "GET" || m === "HEAD") && (u === "/" || u === "/index.html")) {
       const parsedUrl = new URL("http://localhost" + req.url);
       const skipIntro = parsedUrl.searchParams.get("skip_intro") === "1" || parsedUrl.searchParams.get("from_intro") === "1";
