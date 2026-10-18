@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your Decision | STOP CHASING CLIENTS</title>
+<meta name="description" content="Choose your intent for STOP CHASING CLIENTS ebook launch edition.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+<!--PIXEL-->
+<style>
+:root{--k:#000;--w:#fff;--o:#F8F8F6;--y:#FFC400;--d:#161616;--g:#6B6B6B;--border:#e2e2de;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--o);color:var(--d);font:16px/1.6 Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{background:#000;color:#fff;padding:16px 20px;border-bottom:3px solid var(--y)}
+.header-wrap{max-width:840px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font:900 18px Montserrat,sans-serif;letter-spacing:1px;color:#fff;text-decoration:none}
+.logo span{color:var(--y)}
+.badge{background:var(--y);color:#000;font:800 11px Montserrat;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 16px}
+.card{background:#fff;border:1px solid var(--border);border-top:5px solid var(--y);border-radius:8px;padding:38px 30px;max-width:620px;width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+@media(max-width:480px){.card{padding:26px 18px}}
+.eyebrow{font:800 12px Montserrat;letter-spacing:1.5px;color:var(--g);text-transform:uppercase;margin-bottom:8px}
+h1{font:900 clamp(22px,5vw,30px)/1.25 Montserrat,sans-serif;margin:0 0 12px;color:#000;letter-spacing:-.5px}
+.lead{font-size:15px;color:#444;line-height:1.55;margin:0 0 28px}
+.intent-list{display:grid;gap:14px;margin-bottom:26px}
+.opt-card{display:flex;align-items:flex-start;gap:16px;background:#fff;border:2px solid #ddd;border-radius:6px;padding:18px 20px;cursor:pointer;transition:all .15s ease}
+.opt-card:hover{border-color:#111;background:#fafafa}
+.opt-card.selected{border-color:#000;background:#FFFDF5;box-shadow:0 0 0 2px var(--y)}
+.opt-radio{width:22px;height:22px;border:2px solid #555;border-radius:50%;margin-top:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.opt-card.selected .opt-radio{border-color:#000;background:#000}
+.opt-card.selected .opt-radio:after{content:"";width:8px;height:8px;background:var(--y);border-radius:50%}
+.opt-content{flex:1}
+.opt-title{font:800 15px Montserrat,sans-serif;color:#000;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.opt-tag{font:700 11px Montserrat;padding:2px 8px;border-radius:3px;background:#eee;color:#444}
+.opt-card.selected .opt-tag{background:var(--y);color:#000}
+.opt-desc{font-size:13.5px;color:#555;margin:0}
+.btn{display:block;width:100%;background:var(--y);color:#000;font:800 16px/1 Montserrat,sans-serif;padding:18px 24px;border:2px solid #000;border-radius:4px;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s,transform .1s;box-shadow:0 4px 0 #000}
+.btn:hover{background:#ffd033}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #000}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.err{color:#b00020;font-size:13.5px;font-weight:600;min-height:18px;margin-bottom:12px;text-align:center}
+/* Feedback result screen */
+.feedback-box{background:#FFFDF5;border:2px solid var(--y);border-radius:6px;padding:24px 20px;text-align:center;margin-top:10px}
+.feedback-box h2{font:900 22px Montserrat;margin:0 0 10px;color:#000}
+.feedback-box p{font-size:15px;color:#333;margin:0 0 20px;line-height:1.55}
+footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px solid #e5e5e5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-wrap">
+    <a href="/intro" class="logo">MR. <span>CLARITY</span></a>
+    <span class="badge">Launch Edition</span>
+  </div>
+</header>
+
+<main>
+  <div class="card" id="selectionCard">
+    <div class="eyebrow">Onboarding Step 2 of 2</div>
+    <h1>ARE YOU READY TO GET YOUR COPY OF STOP CHASING CLIENTS?</h1>
+    <p class="lead">The launch offer gives you access to the ebook and its practical client-attraction resources. Choose the option that best describes your decision.</p>
+
+    <div class="intent-list" id="intentList">
+      <!-- OPTION 1 -->
+      <div class="opt-card" data-val="READY_NOW">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <div class="opt-title">
+            <span>OPTION 1: YES, I'M READY NOW</span>
+            <span class="opt-tag">Special Launch Price</span>
+          </div>
+          <p class="opt-desc">I'm ready to get the book at the current launch price.</p>
+        </div>
+      </div>
+
+      <!-- OPTION 2 -->
+      <div class="opt-card" data-val="BUY_LATER">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <div class="opt-title">
+            <span>OPTION 2: NO, I'M NOT READY NOW, BUT I'LL GET IT LATER</span>
+            <span class="opt-tag">Explore First</span>
+          </div>
+          <p class="opt-desc">I'd like to explore the offer and consider it later.</p>
+        </div>
+      </div>
+
+      <!-- OPTION 3 -->
+      <div class="opt-card" data-val="NOT_SURE">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <div class="opt-title">
+            <span>OPTION 3: I'M NOT SURE IF I CAN GET IT</span>
+            <span class="opt-tag">Learn More</span>
+          </div>
+          <p class="opt-desc">I need more time to decide whether this is right for me.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="err" id="errSelect"></div>
+    <button type="button" class="btn" id="btnContinue">CONTINUE</button>
+  </div>
+
+  <!-- Feedback screen for Option 2 & 3 -->
+  <div class="card" id="feedbackCard" style="display:none">
+    <div class="feedback-box">
+      <div style="font-size:36px;margin-bottom:8px">📖</div>
+      <h2 id="feedbackTitle">Thank You</h2>
+      <p id="feedbackText"></p>
+      <a href="/?skip_intro=1" class="btn" id="btnExplore">EXPLORE THE SALES PAGE</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Onifade Sulaiman (Mr. Clarity). All rights reserved.</p>
+</footer>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+var sp = new URLSearchParams(window.location.search);
+var leadId = sp.get("lead_id") || localStorage.getItem("scc_lead_id") || "";
+
+var selectedOption = null;
+var cards = document.querySelectorAll(".opt-card");
+
+cards.forEach(function(card){
+  card.addEventListener("click", function(){
+    cards.forEach(function(c){ c.classList.remove("selected"); });
+    card.classList.add("selected");
+    selectedOption = card.getAttribute("data-val");
+    $("errSelect").textContent = "";
+  });
+});
+
+var submitting = false;
+$("btnContinue").addEventListener("click", async function(){
+  if (submitting) return;
+
+  if (!selectedOption) {
+    $("errSelect").textContent = "Please select one of the three options above to continue.";
+    return;
+  }
+
+  submitting = true;
+  var btn = $("btnContinue");
+  btn.disabled = true;
+  btn.textContent = "RECORDING YOUR CHOICE...";
+
+  // Save choice to server
+  try {
+    var payload = {
+      lead_id: leadId,
+      intent: selectedOption
+    };
+
+    var res = await fetch("/api/leads/intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Mark as onboarded in browser storage and cookies
+    try {
+      localStorage.setItem("scc_onboarded", "1");
+      localStorage.setItem("scc_intent", selectedOption);
+      document.cookie = "scc_visited=1; Path=/; Max-Age=31536000; SameSite=Lax";
+      document.cookie = "scc_onboarded=1; Path=/; Max-Age=31536000; SameSite=Lax";
+      if (leadId) document.cookie = "scc_lead_id=" + encodeURIComponent(leadId) + "; Path=/; Max-Age=31536000; SameSite=Lax";
+    } catch(e){}
+
+    // Track analytics event
+    try {
+      if (window.dataLayer) {
+        dataLayer.push({ event: "PurchaseIntentSelected", intent: selectedOption });
+      }
+      if (window.fbq) {
+        fbq("trackCustom", "PurchaseIntentSelected", { intent: selectedOption });
+      }
+    } catch (e) {}
+
+    // Handle each choice
+    if (selectedOption === "READY_NOW") {
+      // Direct immediately to checkout page
+      var query = window.location.search ? window.location.search : (leadId ? "?lead_id=" + encodeURIComponent(leadId) : "");
+      window.location.href = "/checkout" + query;
+    } else if (selectedOption === "BUY_LATER") {
+      $("selectionCard").style.display = "none";
+      $("feedbackTitle").textContent = "No Problem at All";
+      $("feedbackText").textContent = "No problem. You can explore the book and return when you're ready. We've saved your details so you can continue your journey later.";
+      $("btnExplore").textContent = "EXPLORE THE BOOK & SPECIAL OFFER";
+      $("feedbackCard").style.display = "block";
+    } else if (selectedOption === "NOT_SURE") {
+      $("selectionCard").style.display = "none";
+      $("feedbackTitle").textContent = "Take Your Time";
+      $("feedbackText").textContent = "That's completely fine. Take your time to understand what the book offers and decide whether it meets your needs.";
+      $("btnExplore").textContent = "READ ABOUT THE BOOK";
+      $("feedbackCard").style.display = "block";
+    }
+
+  } catch (err) {
+    $("errSelect").textContent = "An error occurred. Proceeding to explore the book...";
+    setTimeout(function(){
+      window.location.href = "/?skip_intro=1";
+    }, 1200);
+  }
+});
+</script>
+</body>
+</html>

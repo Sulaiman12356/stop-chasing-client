@@ -222,6 +222,7 @@ body.in #lg{display:none}
             <th>Email</th>
             <th>Phone</th>
             <th>Status</th>
+            <th>Intent Decision</th>
             <th>Time on Page</th>
             <th>First Touch</th>
             <th>Last Touch</th>
@@ -524,12 +525,22 @@ function renderLeadsTable(){
       LEAD_STATUSES.map(function(s){ return '<option value="' + s + '"' + (s === l.status ? ' selected' : '') + '>' + s + '</option>'; }).join("") +
     '</select>';
 
+    var intentBadge = '<span class="chip" style="font-size:11px;font-weight:700;' +
+      (l.intent === "READY_NOW" ? 'background:#e8f5e9;color:#1b5e20' :
+       l.intent === "BUY_LATER" ? 'background:#e3f2fd;color:#0d47a1' :
+       l.intent === "NOT_SURE" ? 'background:#fff3e0;color:#e65100' : 'background:#eee;color:#666') + '">' +
+      (l.intent === "READY_NOW" ? '⚡ Ready Now' :
+       l.intent === "BUY_LATER" ? '⏳ Buy Later' :
+       l.intent === "NOT_SURE" ? '❓ Not Sure' : 'Pending') +
+    '</span>';
+
     return '<tr>' +
       '<td><small>' + esc(l.id) + '</small></td>' +
       '<td><b>' + esc(l.name) + '</b></td>' +
       '<td>' + esc(l.email) + '</td>' +
       '<td>' + esc(l.phone) + '</td>' +
       '<td>' + leadStatusSelect + '</td>' +
+      '<td>' + intentBadge + '</td>' +
       '<td><span class="chip">' + fmtSecs(l.time_on_page) + '</span></td>' +
       '<td>' + esc(l.fsrc || "direct") + '</td>' +
       '<td><b>' + esc(l.src || "direct") + '</b></td>' +

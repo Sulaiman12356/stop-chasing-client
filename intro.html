@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Welcome | STOP CHASING CLIENTS</title>
+<meta name="description" content="Discover a practical approach to positioning your skills, building trust, and attracting clients who value your work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+<!--PIXEL-->
+<style>
+:root{--k:#000;--w:#fff;--o:#F8F8F6;--y:#FFC400;--d:#161616;--g:#6B6B6B;--border:#e2e2de;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--o);color:var(--d);font:16px/1.6 Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{background:#000;color:#fff;padding:16px 20px;border-bottom:3px solid var(--y)}
+.header-wrap{max-width:840px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font:900 18px Montserrat,sans-serif;letter-spacing:1px;color:#fff;text-decoration:none}
+.logo span{color:var(--y)}
+.badge{background:var(--y);color:#000;font:800 11px Montserrat;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 16px}
+.card{background:#fff;border:1px solid var(--border);border-top:5px solid var(--y);border-radius:8px;padding:36px 28px;max-width:540px;width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.06)}
+@media(max-width:480px){.card{padding:26px 18px}}
+.eyebrow{font:800 12px Montserrat;letter-spacing:1.5px;color:var(--g);text-transform:uppercase;margin-bottom:8px}
+h1{font:900 clamp(24px,5.5vw,32px)/1.2 Montserrat,sans-serif;margin:0 0 12px;color:#000;letter-spacing:-.5px}
+.lead{font-size:15px;color:#444;line-height:1.55;margin:0 0 24px}
+.form-group{margin-bottom:18px}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:6px;color:#111}
+.req{color:#b00020}
+input[type="text"],input[type="email"],input[type="tel"]{width:100%;padding:14px;font:inherit;border:2px solid #000;border-radius:4px;background:#fff;transition:border-color .15s}
+input:focus{outline:none;border-color:var(--y);box-shadow:0 0 0 3px rgba(255,196,0,0.25)}
+.hint{font-size:12px;color:var(--g);margin-top:4px}
+.err{color:#b00020;font-size:13px;font-weight:600;min-height:18px;margin-top:4px}
+.chk-wrap{display:flex;align-items:flex-start;gap:12px;margin:22px 0 10px;font-size:13.5px;line-height:1.45;color:#333}
+.chk-wrap input{width:20px;height:20px;margin-top:2px;cursor:pointer;flex-shrink:0}
+.chk-wrap label{font-weight:400;margin:0;cursor:pointer}
+.chk-wrap a{color:#000;text-decoration:underline;font-weight:600}
+.btn{display:block;width:100%;background:var(--y);color:#000;font:800 16px/1 Montserrat,sans-serif;padding:18px 24px;border:2px solid #000;border-radius:4px;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s,transform .1s;box-shadow:0 4px 0 #000}
+.btn:hover{background:#ffd033}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #000}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.secure-note{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;color:var(--g);margin-top:16px}
+footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px solid #e5e5e5}
+footer a{color:#444;text-decoration:underline}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:8px;max-width:600px;max-height:85vh;overflow-y:auto;padding:28px 24px;position:relative}
+.modal h3{margin-top:0;font-family:Montserrat}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:0;font-size:24px;cursor:pointer;line-height:1}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-wrap">
+    <a href="/intro" class="logo">MR. <span>CLARITY</span></a>
+    <span class="badge">Launch Edition</span>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="eyebrow">Onboarding Step 1 of 2</div>
+    <h1>BEFORE YOU EXPLORE THE BOOK, LET'S GET TO KNOW YOU.</h1>
+    <p class="lead">Discover a practical approach to positioning your skills, building trust, and attracting clients who value your work. Enter your details below to continue.</p>
+
+    <form id="introForm" novalidate>
+      <div class="form-group">
+        <label for="fullName">Full Name <span class="req">*</span></label>
+        <input type="text" id="fullName" name="name" autocomplete="name" placeholder="e.g. Tunde Adeyemi" required>
+        <div class="err" id="errName"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="emailAddr">Email Address <span class="req">*</span></label>
+        <input type="email" id="emailAddr" name="email" autocomplete="email" placeholder="e.g. tunde@example.com" required>
+        <div class="hint">Your digital ebook access and resources will be sent here.</div>
+        <div class="err" id="errEmail"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNum">WhatsApp Phone Number <span class="req">*</span></label>
+        <input type="tel" id="phoneNum" name="phone" autocomplete="tel" placeholder="e.g. 08012345678 or +2348012345678" required>
+        <div class="hint">Accepts Nigerian and international mobile numbers.</div>
+        <div class="err" id="errPhone"></div>
+      </div>
+
+      <div class="chk-wrap">
+        <input type="checkbox" id="consentChk" required>
+        <label for="consentChk">
+          I agree to have my details used to process my ebook enquiry and receive relevant updates about this offer. I understand that I can opt out of marketing messages. (<a href="#privacy" id="linkPrivacy">Privacy Policy</a>)
+        </label>
+      </div>
+      <div class="err" id="errConsent" style="margin-bottom:12px"></div>
+
+      <div class="err" id="errGlobal" style="text-align:center;font-size:14px;margin-bottom:12px"></div>
+
+      <button type="submit" class="btn" id="btnSubmit">CONTINUE</button>
+
+      <div class="secure-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>Your data is strictly confidential. No spam, ever.</span>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Onifade Sulaiman (Mr. Clarity). All rights reserved. &bull; <a href="#" id="linkPrivacyFooter">Privacy Policy &amp; Terms</a></p>
+</footer>
+
+<!-- Privacy Modal -->
+<div class="modal-bg" id="modalPrivacy">
+  <div class="modal">
+    <button type="button" class="modal-close" id="modalClose">&times;</button>
+    <h3>Privacy Policy &amp; Terms</h3>
+    <div style="font-size:14px;color:#444;line-height:1.6">
+      <p><b>Privacy Policy:</b> Your full name, email address, and WhatsApp phone number submitted on this website are used strictly to process your ebook enquiry, deliver digital resources, and verify transactions. Your personal information is never sold, leased, or distributed to unauthorized third parties.</p>
+      <p><b>Marketing &amp; Updates:</b> We only send relevant educational and offer updates concerning STOP CHASING CLIENTS and Clarity Digital Academy. You can opt out at any time.</p>
+      <p><b>Data Security:</b> All customer and lead details are stored securely using strict access controls and encrypted session authorization.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Returning visitor fast-path
+(function(){
+  try {
+    var sp = new URLSearchParams(window.location.search);
+    var force = sp.get("force") === "1";
+    var intent = sp.get("intent");
+    var hasLead = localStorage.getItem("scc_lead_id") || localStorage.getItem("scc_lead");
+    var onboarded = localStorage.getItem("scc_onboarded") === "1";
+    if (!force) {
+      if (intent === "checkout" && hasLead) {
+        window.location.replace("/checkout" + (window.location.search ? window.location.search : ""));
+        return;
+      }
+      if (onboarded && !intent) {
+        window.location.replace("/?skip_intro=1" + (window.location.search ? "&" + window.location.search.replace(/^\?/, "") : ""));
+        return;
+      }
+    }
+  } catch(e){}
+})();
+
+var $ = function(id){ return document.getElementById(id); };
+
+// Parse and preserve UTM attribution
+var sp = new URLSearchParams(window.location.search);
+var utmData = {
+  src: sp.get("utm_source") || (document.referrer ? new URL(document.referrer, location.href).hostname : "direct"),
+  medium: sp.get("utm_medium") || "",
+  camp: sp.get("utm_campaign") || "",
+  content: sp.get("utm_content") || "",
+  term: sp.get("utm_term") || "",
+  referrer: document.referrer || "direct",
+  landing: "/intro",
+  dev: /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop"
+};
+
+// Check for existing saved lead to prefill
+try {
+  var saved = JSON.parse(localStorage.getItem("scc_lead") || "null");
+  if (saved && typeof saved === "object") {
+    if (saved.name) $("fullName").value = saved.name;
+    if (saved.email) $("emailAddr").value = saved.email;
+    if (saved.phone) $("phoneNum").value = saved.phone;
+  }
+} catch (e) {}
+
+// Track LeadFormViewed
+try {
+  window.dataLayer = window.dataLayer || [];
+  dataLayer.push({ event: "LeadFormViewed" });
+  if (window.fbq) fbq("trackCustom", "LeadFormViewed");
+} catch (e) {}
+
+// Privacy Modal handlers
+var modal = $("modalPrivacy");
+$("linkPrivacy").onclick = function(e){ e.preventDefault(); modal.classList.add("open"); };
+$("linkPrivacyFooter").onclick = function(e){ e.preventDefault(); modal.classList.add("open"); };
+$("modalClose").onclick = function(){ modal.classList.remove("open"); };
+modal.onclick = function(e){ if (e.target === modal) modal.classList.remove("open"); };
+
+// Form Validation and Submission
+var form = $("introForm");
+var submitting = false;
+
+form.addEventListener("submit", async function(ev){
+  ev.preventDefault();
+  if (submitting) return;
+
+  var name = $("fullName").value.trim();
+  var email = $("emailAddr").value.trim().toLowerCase();
+  var rawPhone = $("phoneNum").value.trim();
+  var phone = rawPhone.replace(/[\s()\-]/g, "");
+  var consent = $("consentChk").checked;
+
+  var valid = true;
+  $("errName").textContent = "";
+  $("errEmail").textContent = "";
+  $("errPhone").textContent = "";
+  $("errConsent").textContent = "";
+  $("errGlobal").textContent = "";
+
+  if (name.length < 2) {
+    $("errName").textContent = "Please enter your full name.";
+    valid = false;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    $("errEmail").textContent = "Please enter a valid email address.";
+    valid = false;
+  }
+
+  // Accept Nigerian numbers (070, 080, 081, 090, 234...) and international (+1, +44, etc.)
+  if (!/^\+?\d{8,16}$/.test(phone)) {
+    $("errPhone").textContent = "Please enter a valid WhatsApp phone number (e.g. 08012345678 or +234...)";
+    valid = false;
+  }
+
+  if (!consent) {
+    $("errConsent").textContent = "Please check the box to agree to proceed.";
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  submitting = true;
+  var btn = $("btnSubmit");
+  btn.disabled = true;
+  btn.textContent = "SAVING YOUR DETAILS...";
+
+  var payload = {
+    name: name,
+    email: email,
+    phone: phone,
+    consent: true,
+    utm_source: utmData.src,
+    utm_medium: utmData.medium,
+    utm_campaign: utmData.camp,
+    utm_content: utmData.content,
+    utm_term: utmData.term,
+    referrer: utmData.referrer,
+    landing: "/intro",
+    dev: utmData.dev
+  };
+
+  try {
+    var res = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    var data = await res.json();
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || "Failed to save details. Please check your network and retry.");
+    }
+
+    // Save lead record in localStorage for subsequent steps
+    var leadRecord = {
+      id: data.lead_id,
+      name: name,
+      email: email,
+      phone: phone
+    };
+    localStorage.setItem("scc_lead", JSON.stringify(leadRecord));
+    localStorage.setItem("scc_lead_id", data.lead_id);
+    document.cookie = "scc_visited=1; Path=/; Max-Age=31536000; SameSite=Lax";
+    document.cookie = "scc_lead_id=" + encodeURIComponent(data.lead_id) + "; Path=/; Max-Age=31536000; SameSite=Lax";
+
+    // Track analytics events
+    try {
+      if (window.dataLayer) {
+        dataLayer.push({ event: "LeadCaptured", lead_id: data.lead_id });
+      }
+      if (window.fbq) {
+        fbq("track", "Lead", { content_name: "STOP CHASING CLIENTS Enquiry" });
+        fbq("trackCustom", "LeadCaptured", { content_name: "STOP CHASING CLIENTS Enquiry" });
+      }
+    } catch (e) {}
+
+    // Check if user came from a specific intent (e.g. checkout direct)
+    var target = sp.get("intent") === "checkout" ? "/checkout" : "/intent";
+    var query = window.location.search ? window.location.search + "&lead_id=" + encodeURIComponent(data.lead_id) : "?lead_id=" + encodeURIComponent(data.lead_id);
+    window.location.href = target + query;
+
+  } catch (err) {
+    $("errGlobal").textContent = err.message || "An error occurred while saving your details. Please try again.";
+    btn.disabled = false;
+    btn.textContent = "RETRY CONTINUE";
+    submitting = false;
+  }
+});
+</script>
+</body>
+</html>

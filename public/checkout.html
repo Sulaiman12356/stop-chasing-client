@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Secure Checkout & Bank Transfer | STOP CHASING CLIENTS</title>
+<meta name="description" content="Complete your bank transfer payment for STOP CHASING CLIENTS by Onifade Sulaiman (Mr. Clarity).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+<!--PIXEL-->
+<style>
+:root{--k:#000;--w:#fff;--o:#F8F8F6;--y:#FFC400;--d:#161616;--g:#6B6B6B;--border:#e2e2de;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--o);color:var(--d);font:16px/1.6 Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{background:#000;color:#fff;padding:16px 20px;border-bottom:3px solid var(--y)}
+.header-wrap{max-width:840px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font:900 18px Montserrat,sans-serif;letter-spacing:1px;color:#fff;text-decoration:none}
+.logo span{color:var(--y)}
+.badge{background:var(--y);color:#000;font:800 11px Montserrat;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:36px 16px}
+.container{max-width:680px;width:100%}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:32px 26px;box-shadow:0 12px 36px rgba(0,0,0,0.06);margin-bottom:20px}
+@media(max-width:480px){.card{padding:22px 16px}}
+.eyebrow{font:800 12px Montserrat;letter-spacing:1.5px;color:var(--g);text-transform:uppercase;margin-bottom:6px}
+h1{font:900 clamp(22px,5vw,28px)/1.2 Montserrat,sans-serif;margin:0 0 10px;color:#000}
+.notice-box{background:#FFFDF5;border:2px solid var(--y);border-radius:6px;padding:16px;margin:18px 0;text-align:center}
+.notice-box .tag{display:inline-block;background:var(--y);color:#000;font:800 11px Montserrat;padding:3px 8px;border-radius:3px;margin-bottom:6px}
+.order-summary{background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:18px 20px;margin:18px 0}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;font-size:14.5px}
+.summary-row:last-child{border-bottom:0;font-weight:800;font-size:17px;color:#000;padding-top:12px}
+.pay-details{background:#000;color:#fff;border-radius:6px;padding:24px 22px;margin:22px 0}
+.pay-details h3{margin:0 0 16px;font:800 17px Montserrat;color:var(--y);letter-spacing:.5px}
+.pay-grid{display:grid;grid-template-columns:1fr;gap:12px;font-size:14.5px}
+@media(min-width:540px){.pay-grid{grid-template-columns:130px 1fr}}
+.pay-lbl{color:#aaa}
+.pay-val{font-weight:700;color:#fff}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--y);color:#000;font:800 12px Montserrat;border:0;border-radius:3px;padding:5px 12px;margin-left:8px;cursor:pointer;vertical-align:middle}
+.copy-btn:hover{background:#ffd033}
+.steps{padding-left:20px;margin:16px 0;font-size:14px;color:#333;line-height:1.6}
+.steps li{margin-bottom:8px}
+.btn{display:block;width:100%;background:var(--y);color:#000;font:800 16px/1 Montserrat,sans-serif;padding:18px 24px;border:2px solid #000;border-radius:4px;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s,transform .1s;box-shadow:0 4px 0 #000}
+.btn:hover{background:#ffd033}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #000}
+.btn-wa{background:#25d366;color:#fff;border-color:#128c7e;margin-top:12px}
+.btn-wa:hover{background:#20ba59}
+.status-link{display:block;text-align:center;margin-top:16px;font-size:13.5px;color:#555;text-decoration:underline}
+footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px solid #e5e5e5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-wrap">
+    <a href="/?skip_intro=1" class="logo">MR. <span>CLARITY</span></a>
+    <span class="badge">Secure Checkout</span>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="card">
+      <div class="eyebrow">Direct Bank Transfer</div>
+      <h1>COMPLETE YOUR ORDER</h1>
+      <p style="margin:0 0 12px;font-size:14.5px;color:#555">Your order reference has been reserved. Follow the steps below to make your transfer and confirm your payment.</p>
+
+      <div class="notice-box">
+        <span class="tag">ORDER RESERVATION</span>
+        <div style="font-size:14px;font-weight:700;color:#000">Order Reference: <span id="dispRef" style="font-family:monospace;font-size:16px;color:#b00020">GENERATING...</span></div>
+        <div style="font-size:13px;color:#555;margin-top:4px">Reserved for: <b id="dispCustomer">-</b> (<span id="dispEmail">-</span>)</div>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>STOP CHASING CLIENTS (Digital Ebook)</span>
+          <span id="dispCorePrice">₦5,500</span>
+        </div>
+        <div class="summary-row">
+          <span>Clarity Client Attraction Framework & Worksheets</span>
+          <span style="color:#2e7d32;font-weight:700">INCLUDED</span>
+        </div>
+        <div class="summary-row">
+          <span>Remote Job Application Guide & Opportunity Access</span>
+          <span style="color:#2e7d32;font-weight:700">FREE BONUS</span>
+        </div>
+        <div class="summary-row">
+          <span>Total Amount to Transfer</span>
+          <span id="dispTotal" style="color:#000;font-size:20px">₦5,500</span>
+        </div>
+      </div>
+
+      <!-- Bank Details Box -->
+      <div class="pay-details">
+        <h3>OFFICIAL BANK TRANSFER DETAILS</h3>
+        <div class="pay-grid">
+          <div class="pay-lbl">Bank Name:</div>
+          <div class="pay-val" id="dispBankName">Opay</div>
+
+          <div class="pay-lbl">Account Number:</div>
+          <div class="pay-val">
+            <span id="dispAccNum" style="font-family:monospace;font-size:18px;letter-spacing:1px">8120525609</span>
+            <button type="button" class="copy-btn" id="btnCopyAcc">COPY ACCOUNT</button>
+          </div>
+
+          <div class="pay-lbl">Account Name:</div>
+          <div class="pay-val" id="dispAccHolder">Onifade Sulaiman Ipesola</div>
+
+          <div class="pay-lbl">Payment Narration:</div>
+          <div class="pay-val"><span id="dispNarration" style="color:var(--y);font-family:monospace">-</span></div>
+        </div>
+      </div>
+
+      <h3 style="font:800 16px Montserrat;margin:20px 0 8px">Next Steps to Receive Your Book:</h3>
+      <ol class="steps">
+        <li>Open your mobile banking app and transfer the exact amount (<b id="stepAmt">₦5,500</b>) to the account above.</li>
+        <li>Use your order reference (<b id="stepRef">-</b>) as the transfer remark or description.</li>
+        <li>Once transferred, tap the button below to send your prefilled WhatsApp confirmation with your receipt.</li>
+        <li>Mr. Clarity will verify your payment and email your instant ebook access immediately.</li>
+      </ol>
+
+      <a href="#" class="btn btn-wa" id="btnWa" target="_blank" rel="noopener">
+        CONFIRM PAYMENT ON WHATSAPP
+      </a>
+
+      <a href="#" class="status-link" id="linkCheckStatus">Already transferred? Check your verified payment status here &rarr;</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Onifade Sulaiman (Mr. Clarity). All rights reserved. &bull; <a href="/?skip_intro=1">Back to sales page</a></p>
+</footer>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+var fmt = function(n){ return "₦" + Math.round(n || 0).toLocaleString("en-NG"); };
+
+var sp = new URLSearchParams(window.location.search);
+var leadId = sp.get("lead_id") || localStorage.getItem("scc_lead_id") || "";
+
+// Load lead details from storage or query
+var lead = {};
+try {
+  lead = JSON.parse(localStorage.getItem("scc_lead") || "{}");
+} catch(e){}
+
+var CFG = {
+  price: 5500,
+  regular: 12500,
+  wa: "2348051780169",
+  product: "STOP CHASING CLIENTS",
+  bank: { name: "Opay", account: "8120525609", holder: "Onifade Sulaiman Ipesola" }
+};
+
+// Fetch latest dynamic config from server
+fetch("/api/config?t=" + Date.now()).then(function(r){ return r.ok ? r.json() : null; }).then(function(c){
+  if (c) {
+    Object.assign(CFG, c);
+    updateDisplay();
+  }
+}).catch(function(){});
+
+// Generate / retrieve order reference
+var orderRef = localStorage.getItem("scc_order_ref");
+if (!orderRef || !orderRef.startsWith("SCC-")) {
+  orderRef = "SCC-" + Date.now().toString(36).toUpperCase();
+  localStorage.setItem("scc_order_ref", orderRef);
+}
+
+function updateDisplay(){
+  var activePrice = CFG.price || 5500;
+  $("dispRef").textContent = orderRef;
+  $("dispCustomer").textContent = lead.name || "Valued Reader";
+  $("dispEmail").textContent = lead.email || "Registered Email";
+  $("dispCorePrice").textContent = fmt(activePrice);
+  $("dispTotal").textContent = fmt(activePrice);
+  $("stepAmt").textContent = fmt(activePrice);
+  $("stepRef").textContent = orderRef;
+  $("dispNarration").textContent = orderRef;
+
+  if (CFG.bank) {
+    if (CFG.bank.name) $("dispBankName").textContent = CFG.bank.name;
+    if (CFG.bank.account) $("dispAccNum").textContent = CFG.bank.account;
+    if (CFG.bank.holder) $("dispAccHolder").textContent = CFG.bank.holder;
+  }
+
+  // Build WhatsApp prefilled message
+  var waPhone = String(CFG.wa || "2348051780169").replace(/\D/g, "");
+  var msg = "Hello Mr. Clarity,\n\nI have made payment for the " + CFG.product + " ebook.\n\nName: " + (lead.name || "") + "\nEmail: " + (lead.email || "") + "\nPhone: " + (lead.phone || "") + "\nAmount: " + fmt(activePrice) + "\nOrder: " + orderRef + "\n\nPlease confirm my payment and send my access.";
+  $("btnWa").href = "https://wa.me/" + waPhone + "?text=" + encodeURIComponent(msg);
+
+  $("linkCheckStatus").href = "/payment-status?ref=" + encodeURIComponent(orderRef);
+}
+updateDisplay();
+
+// Save order to server if not saved yet
+var orderCreated = false;
+async function recordOrder(){
+  if (orderCreated) return;
+  orderCreated = true;
+
+  var payload = {
+    id: orderRef,
+    lead_id: leadId,
+    name: lead.name || "Customer",
+    email: lead.email || "",
+    phone: lead.phone || "",
+    amount: CFG.price || 5500,
+    consent: true,
+    src: sp.get("utm_source") || "direct",
+    medium: sp.get("utm_medium") || "",
+    camp: sp.get("utm_campaign") || "",
+    content: sp.get("utm_content") || "",
+    term: sp.get("utm_term") || "",
+    dev: /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop"
+  };
+
+  try {
+    await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+  } catch(e){}
+
+  // Track CheckoutInitiated
+  try {
+    if (window.dataLayer) {
+      dataLayer.push({ event: "CheckoutInitiated", order_id: orderRef, value: CFG.price });
+    }
+    if (window.fbq) {
+      fbq("track", "InitiateCheckout", { content_name: CFG.product, value: CFG.price, currency: "NGN", order_id: orderRef });
+      fbq("trackCustom", "CheckoutInitiated", { order_id: orderRef });
+    }
+  } catch(e){}
+}
+recordOrder();
+
+// Copy button
+$("btnCopyAcc").onclick = function(){
+  var btn = this;
+  var num = $("dispAccNum").textContent.trim();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(num).then(function(){
+      btn.textContent = "COPIED!";
+      setTimeout(function(){ btn.textContent = "COPY ACCOUNT"; }, 2500);
+    }).catch(function(){
+      btn.textContent = "COPIED!";
+    });
+  } else {
+    btn.textContent = "COPIED!";
+  }
+};
+
+// WhatsApp button click tracking
+$("btnWa").addEventListener("click", function(){
+  try {
+    fetch("/api/wa", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: orderRef })
+    }).catch(function(){});
+    if (window.dataLayer) dataLayer.push({ event: "WhatsAppConfirmationClicked", order_id: orderRef });
+    if (window.fbq) fbq("trackCustom", "WhatsAppConfirmationClicked", { order_id: orderRef });
+  } catch(e){}
+});
+</script>
+</body>
+</html>

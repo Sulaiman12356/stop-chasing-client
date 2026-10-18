@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Order & Payment Status | STOP CHASING CLIENTS</title>
+<meta name="description" content="Check your payment status and access STOP CHASING CLIENTS ebook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+<!--PIXEL-->
+<style>
+:root{--k:#000;--w:#fff;--o:#F8F8F6;--y:#FFC400;--d:#161616;--g:#6B6B6B;--border:#e2e2de;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--o);color:var(--d);font:16px/1.6 Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{background:#000;color:#fff;padding:16px 20px;border-bottom:3px solid var(--y)}
+.header-wrap{max-width:840px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font:900 18px Montserrat,sans-serif;letter-spacing:1px;color:#fff;text-decoration:none}
+.logo span{color:var(--y)}
+.badge{background:var(--y);color:#000;font:800 11px Montserrat;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:36px 16px}
+.container{max-width:640px;width:100%}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:36px 28px;box-shadow:0 12px 36px rgba(0,0,0,0.06);margin-bottom:20px}
+@media(max-width:480px){.card{padding:24px 18px}}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font:800 13px Montserrat;letter-spacing:.5px;margin-bottom:14px}
+.status-pill.confirmed{background:#e8f5e9;color:#1b5e20;border:1.5px solid #a5d6a7}
+.status-pill.pending{background:#fff8e1;color:#f57f17;border:1.5px solid #ffe082}
+.status-pill.unknown{background:#eee;color:#555}
+h1{font:900 clamp(22px,5vw,28px)/1.2 Montserrat,sans-serif;margin:0 0 10px;color:#000}
+.ref-box{background:#f9f9f9;border:1px dashed #ccc;border-radius:6px;padding:14px;margin:18px 0;font-size:14px}
+.ref-box b{font-family:monospace;font-size:17px;color:#000}
+.info-box{background:#fcfcfc;border-left:4px solid var(--y);padding:14px 18px;margin:20px 0;font-size:14.5px;color:#333;line-height:1.6}
+.btn{display:block;width:100%;background:var(--y);color:#000;font:800 16px/1 Montserrat,sans-serif;padding:18px 24px;border:2px solid #000;border-radius:4px;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s,transform .1s;box-shadow:0 4px 0 #000}
+.btn:hover{background:#ffd033}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #000}
+.btn-wa{background:#25d366;color:#fff;border-color:#128c7e;margin-top:16px}
+.btn-wa:hover{background:#20ba59}
+.search-form{display:flex;gap:8px;margin-top:14px}
+.search-form input{flex:1;padding:12px;border:2px solid #000;border-radius:4px;font:inherit}
+.search-form button{width:auto;padding:12px 20px}
+footer{text-align:center;padding:24px;font-size:13px;color:#777;border-top:1px solid #e5e5e5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-wrap">
+    <a href="/?skip_intro=1" class="logo">MR. <span>CLARITY</span></a>
+    <span class="badge">Verification Portal</span>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="card" id="statusCard">
+      <!-- Loading state -->
+      <div id="stateLoading" style="text-align:center;padding:20px 0">
+        <div style="font-size:32px;margin-bottom:8px">⏳</div>
+        <h2 style="font:800 20px Montserrat;margin:0">Checking Order Status...</h2>
+        <p style="color:#666;font-size:14px;margin-top:4px">Please wait while we verify your order reference.</p>
+      </div>
+
+      <!-- State: Payment Confirmed -->
+      <div id="stateConfirmed" style="display:none">
+        <div class="status-pill confirmed">✓ PAYMENT CONFIRMED &amp; VERIFIED</div>
+        <h1>YOUR ORDER IS CONFIRMED!</h1>
+        <p style="color:#333;font-size:15px;margin-bottom:16px">Thank you for purchasing <b>STOP CHASING CLIENTS</b>. Your payment has been successfully confirmed and your order is complete.</p>
+
+        <div class="ref-box">
+          <div>Product: <b>STOP CHASING CLIENTS (Launch Edition)</b></div>
+          <div style="margin-top:6px">Order Reference: <b id="confRef">-</b></div>
+          <div style="margin-top:4px;color:#555">Customer: <span id="confCustomer">-</span></div>
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin:0 0 6px;font:800 15px Montserrat">Next Steps for Receiving Your Ebook:</h3>
+          <ul style="margin:6px 0 0;padding-left:18px">
+            <li>Your complete ebook package and all 3 bonus career resources have been dispatched to your email address: <b id="confEmail">-</b>.</li>
+            <li>If you do not see it in your primary inbox, please check your Promotions or Spam folder.</li>
+            <li>You can also connect with Mr. Clarity directly on WhatsApp below for priority delivery assistance.</li>
+          </ul>
+        </div>
+
+        <a href="#" class="btn btn-wa" id="btnWaConfirmed" target="_blank" rel="noopener">
+          CONFIRM ON WHATSAPP (+2348051780169)
+        </a>
+
+        <div style="text-align:center;margin-top:16px">
+          <a href="/?skip_intro=1" style="color:#555;font-size:13.5px;text-decoration:underline">Return to sales landing page</a>
+        </div>
+      </div>
+
+      <!-- State: Payment Pending Verification -->
+      <div id="statePending" style="display:none">
+        <div class="status-pill pending">⏱ PAYMENT PENDING VERIFICATION</div>
+        <h1>PAYMENT PENDING CONFIRMATION</h1>
+        <p style="color:#444;font-size:15px;line-height:1.55">We have registered your order reference. If you have already made your bank transfer, please notify Mr. Clarity on WhatsApp so your payment can be verified and access dispatched.</p>
+
+        <div class="ref-box">
+          <div>Order Reference: <b id="pendRef">-</b></div>
+          <div style="margin-top:4px">Product: <b>STOP CHASING CLIENTS</b></div>
+          <div style="margin-top:4px">Amount Payable: <b id="pendAmount">₦5,500</b></div>
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin:0 0 6px;font:800 15px Montserrat">Bank Transfer Instructions:</h3>
+          <div>Bank: <b>Opay</b> &bull; Account: <b>8120525609</b> &bull; Name: <b>Onifade Sulaiman Ipesola</b></div>
+          <div style="margin-top:4px;color:#555;font-size:13px">Use your order reference as the transfer description.</div>
+        </div>
+
+        <a href="#" class="btn btn-wa" id="btnWaPending" target="_blank" rel="noopener">
+          SEND RECEIPT ON WHATSAPP (+2348051780169)
+        </a>
+
+        <div style="text-align:center;margin-top:16px">
+          <button type="button" class="btn" style="background:#000;color:#fff;border-color:#000;padding:12px 18px;font-size:14px;box-shadow:none" onclick="checkStatus()">
+            🔄 REFRESH STATUS
+          </button>
+        </div>
+      </div>
+
+      <!-- State: Not Found / Search -->
+      <div id="stateNotFound" style="display:none">
+        <div class="status-pill unknown">LOOKUP ORDER</div>
+        <h1>CHECK YOUR ORDER STATUS</h1>
+        <p style="color:#555;font-size:14.5px">Enter your order reference below to check your payment status and ebook delivery access.</p>
+
+        <form class="search-form" id="searchForm">
+          <input type="text" id="inputRef" placeholder="e.g. SCC-XXXXX" required>
+          <button type="submit" class="btn">LOOKUP</button>
+        </form>
+        <div id="errLookup" style="color:#b00020;font-size:13px;margin-top:8px"></div>
+
+        <div style="margin-top:24px;text-align:center;font-size:13.5px">
+          <a href="/checkout" style="color:#000;font-weight:700">Need to make a new order? Go to checkout &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Onifade Sulaiman (Mr. Clarity). All rights reserved. &bull; <a href="/?skip_intro=1">Back to sales page</a></p>
+</footer>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+var fmt = function(n){ return "₦" + Math.round(n || 0).toLocaleString("en-NG"); };
+
+var sp = new URLSearchParams(window.location.search);
+var queryRef = sp.get("ref") || localStorage.getItem("scc_order_ref") || "";
+
+var WA_PHONE = "2348051780169";
+
+function makeWaLink(ref, isConfirmed){
+  var msg = isConfirmed
+    ? "Hello Mr. Clarity, I have completed my payment for STOP CHASING CLIENTS. My order reference is " + ref + ". Please guide me on accessing my ebook."
+    : "Hello Mr. Clarity, I have made payment for STOP CHASING CLIENTS with order reference: " + ref + ". Here is my transfer confirmation.";
+  return "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(msg);
+}
+
+async function checkStatus(overrideRef){
+  var ref = (overrideRef || queryRef || "").trim();
+  if (!ref) {
+    showState("stateNotFound");
+    return;
+  }
+
+  showState("stateLoading");
+
+  try {
+    var res = await fetch("/api/orders/status?ref=" + encodeURIComponent(ref) + "&t=" + Date.now());
+    var data = await res.json();
+
+    if (!res.ok || !data.ok || !data.found) {
+      showState("stateNotFound");
+      $("errLookup").textContent = "Order reference not found. Please verify the code and try again.";
+      return;
+    }
+
+    var o = data.order;
+    var isConfirmed = (o.status === "PAYMENT_CONFIRMED" || o.status === "ACCESS_SENT" || o.status === "COMPLETED");
+
+    if (isConfirmed) {
+      $("confRef").textContent = o.id;
+      $("confCustomer").textContent = o.name || "Valued Reader";
+      $("confEmail").textContent = o.email || "your email";
+      $("btnWaConfirmed").href = makeWaLink(o.id, true);
+
+      // Trigger PaymentConfirmed event once verified
+      try {
+        if (window.dataLayer) dataLayer.push({ event: "PaymentConfirmed", order_id: o.id, value: o.amount });
+        if (window.fbq) fbq("track", "Purchase", { content_name: "STOP CHASING CLIENTS", value: o.amount, currency: "NGN", order_id: o.id });
+      } catch(e){}
+
+      showState("stateConfirmed");
+    } else {
+      $("pendRef").textContent = o.id;
+      $("pendAmount").textContent = fmt(o.amount || 5500);
+      $("btnWaPending").href = makeWaLink(o.id, false);
+      showState("statePending");
+    }
+
+  } catch(err){
+    showState("stateNotFound");
+    $("errLookup").textContent = "Could not connect to verify status. Please check your network and retry.";
+  }
+}
+
+function showState(id){
+  ["stateLoading", "stateConfirmed", "statePending", "stateNotFound"].forEach(function(s){
+    $(s).style.display = (s === id ? "block" : "none");
+  });
+}
+
+// Initial check
+checkStatus();
+
+// Search form
+$("searchForm").onsubmit = function(e){
+  e.preventDefault();
+  var val = $("inputRef").value.trim().toUpperCase();
+  if (val) {
+    history.replaceState(null, "", "/payment-status?ref=" + encodeURIComponent(val));
+    checkStatus(val);
+  }
+};
+
+// WhatsApp button click tracking
+["btnWaConfirmed", "btnWaPending"].forEach(function(id){
+  var el = $(id);
+  if (el) {
+    el.addEventListener("click", function(){
+      try {
+        if (window.dataLayer) dataLayer.push({ event: "WhatsAppConfirmationClicked" });
+        if (window.fbq) fbq("trackCustom", "WhatsAppConfirmationClicked");
+      } catch(e){}
+    });
+  }
+});
+</script>
+</body>
+</html>

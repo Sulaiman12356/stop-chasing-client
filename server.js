@@ -260,13 +260,78 @@ const handler = async (req, res) => {
     if ((m === "GET" || m === "HEAD") && u === "/healthz") return send(res, 200, { ok: 1 });
 
     if ((m === "GET" || m === "HEAD") && (u === "/" || u === "/index.html")) {
+      const parsedUrl = new URL("http://localhost" + req.url);
+      const skipIntro = parsedUrl.searchParams.get("skip_intro") === "1" || parsedUrl.searchParams.get("from_intro") === "1";
+      const cookies = req.headers.cookie || "";
+      const hasVisited = cookies.includes("scc_visited=1") || cookies.includes("scc_onboarded=1") || cookies.includes("scc_lead_id=");
+
+      if (!skipIntro && !hasVisited) {
+        // First-time visitor: redirect to introductory lead capture page with query preserved
+        const qs = parsedUrl.search ? parsedUrl.search : "";
+        res.writeHead(302, {
+          "Location": "/intro" + qs,
+          "Set-Cookie": "scc_visited=1; Path=/; Max-Age=31536000; SameSite=Lax",
+          "Cache-Control": "no-cache, no-store, must-revalidate"
+        });
+        return res.end();
+      }
+
       let h = loadHtml("index.html");
       h = h.replace("<!--PIXEL-->", pixel());
       res.writeHead(200, {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Set-Cookie": "scc_visited=1; Path=/; Max-Age=31536000; SameSite=Lax",
         "Pragma": "no-cache",
         "Expires": "0"
+      });
+      return res.end(m === "HEAD" ? "" : h);
+    }
+
+    // First-Time Visitor Lead Capture Page
+    if ((m === "GET" || m === "HEAD") && (u === "/intro" || u === "/intro.html" || u === "/welcome")) {
+      let h = loadHtml("intro.html");
+      h = h.replace("<!--PIXEL-->", pixel());
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      });
+      return res.end(m === "HEAD" ? "" : h);
+    }
+
+    // Purchase-Intention Selection Page
+    if ((m === "GET" || m === "HEAD") && (u === "/intent" || u === "/intent.html")) {
+      let h = loadHtml("intent.html");
+      h = h.replace("<!--PIXEL-->", pixel());
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      });
+      return res.end(m === "HEAD" ? "" : h);
+    }
+
+    // Dedicated Checkout Page
+    if ((m === "GET" || m === "HEAD") && (u === "/checkout" || u === "/checkout.html" || u === "/payment")) {
+      let h = loadHtml("checkout.html");
+      h = h.replace("<!--PIXEL-->", pixel());
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      });
+      return res.end(m === "HEAD" ? "" : h);
+    }
+
+    // Verified Payment Status & Ebook Access Page
+    if ((m === "GET" || m === "HEAD") && (u === "/payment-status" || u === "/payment-status.html" || u === "/success")) {
+      let h = loadHtml("payment-status.html");
+      h = h.replace("<!--PIXEL-->", pixel());
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
       });
       return res.end(m === "HEAD" ? "" : h);
     }
@@ -299,7 +364,9 @@ const handler = async (req, res) => {
       const validEvents = [
         "view", "view_content", "cta", "lead", "checkout", "wa",
         "time_on_page", "payment_instruction_viewed", "payment_submitted",
-        "payment_confirmed", "download_access", "bonus_access"
+        "payment_confirmed", "download_access", "bonus_access",
+        "lead_form_viewed", "lead_captured", "purchase_intent_selected",
+        "checkout_initiated", "whatsapp_confirmation_clicked"
       ];
       if (!validEvents.includes(b.n)) return send(res, 400, {});
 
@@ -317,6 +384,192 @@ const handler = async (req, res) => {
       if (db.events.length > 5e4) db.events.shift();
       save();
       return send(res, 200, { ok: 1 });
+    }
+
+    // First-Time Visitor Lead Capture Endpoint
+    if (m === "POST" && u === "/api/leads") {
+      if (limited("lead_" + I, 30, 6e4)) return send(res, 429, { ok: false, error: "Too many requests. Please wait a moment." });
+      const b = await body(req);
+      const name = clip(b.name, 100);
+      const email = clip(b.email, 120).toLowerCase();
+      const rawPhone = clip(b.phone, 30).replace(/[\s()\-]/g, "");
+
+      if (name.length < 2) {
+        return send(res, 400, { ok: false, error: "Please enter your full name." });
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return send(res, 400, { ok: false, error: "Please enter a valid email address." });
+      }
+      if (!/^\+?\d{8,18}$/.test(rawPhone)) {
+        return send(res, 400, { ok: false, error: "Please enter a valid phone or WhatsApp number." });
+      }
+      if (b.consent !== true) {
+        return send(res, 400, { ok: false, error: "Please check the box to agree to proceed." });
+      }
+
+      let phone = rawPhone;
+      if (phone.startsWith("0") && phone.length === 11) {
+        phone = "234" + phone.slice(1);
+      } else if (phone.startsWith("+")) {
+        phone = phone.slice(1);
+      }
+
+      const now = Date.now();
+      let lead = db.leads.find(l => l.email === email || l.phone === phone || l.phone === rawPhone);
+      if (!lead) {
+        lead = {
+          id: "LEAD-" + crypto.randomBytes(4).toString("hex").toUpperCase(),
+          name,
+          email,
+          phone,
+          consent: true,
+          consent_at: now,
+          intent: null,
+          intent_at: null,
+          status: "NEW",
+          src: clip(b.utm_source || b.src, 60) || "direct",
+          fsrc: clip(b.fsrc || b.utm_source || b.src, 60) || "direct",
+          utm_source: clip(b.utm_source, 60) || "direct",
+          utm_medium: clip(b.utm_medium, 60) || "",
+          utm_campaign: clip(b.utm_campaign, 100) || "",
+          utm_content: clip(b.utm_content, 100) || "",
+          utm_term: clip(b.utm_term, 100) || "",
+          landing: clip(b.landing, 100) || "/intro",
+          referrer: clip(b.referrer, 200) || "direct",
+          time_on_page: 0,
+          first_visit: now,
+          last_visit: now,
+          created: now,
+          updated: now,
+          notes: ""
+        };
+        db.leads.push(lead);
+      } else {
+        lead.name = name;
+        lead.phone = phone;
+        lead.consent = true;
+        lead.consent_at = lead.consent_at || now;
+        lead.last_visit = now;
+        lead.updated = now;
+        if (b.utm_campaign) lead.utm_campaign = clip(b.utm_campaign, 100);
+      }
+
+      db.events.push({
+        t: now,
+        n: "lead_captured",
+        id: lead.id,
+        src: lead.src,
+        dev: b.dev === "mobile" ? "mobile" : "desktop"
+      });
+      if (db.events.length > 5e4) db.events.shift();
+
+      save();
+      return send(res, 200, { ok: true, lead_id: lead.id, lead });
+    }
+
+    // Purchase-Intention Selection Endpoint
+    if (m === "POST" && u === "/api/leads/intent") {
+      if (limited("int_" + I, 40, 6e4)) return send(res, 429, { ok: false, error: "Too many requests." });
+      const b = await body(req);
+      const leadId = clip(b.lead_id, 50);
+      const validIntents = ["READY_NOW", "BUY_LATER", "NOT_SURE"];
+      if (!validIntents.includes(b.intent)) {
+        return send(res, 400, { ok: false, error: "Invalid intent option." });
+      }
+
+      let lead = db.leads.find(l => l.id === leadId);
+      const now = Date.now();
+      if (lead) {
+        lead.intent = b.intent;
+        lead.intent_at = now;
+        lead.updated = now;
+        if (b.intent === "READY_NOW" && lead.status === "NEW") {
+          lead.status = "PAYMENT_PENDING";
+        }
+      }
+
+      db.events.push({
+        t: now,
+        n: "purchase_intent_selected",
+        id: leadId || "",
+        intent: b.intent,
+        src: lead ? lead.src : "direct",
+        dev: b.dev === "mobile" ? "mobile" : "desktop"
+      });
+      if (db.events.length > 5e4) db.events.shift();
+
+      save();
+      return send(res, 200, { ok: true, lead_id: leadId, intent: b.intent });
+    }
+
+    // Fetch Lead Details by ID (for checkout prefill)
+    const pmGetLead = u.match(/^\/api\/leads\/([\w-]+)$/);
+    if (m === "GET" && pmGetLead) {
+      const l = db.leads.find(x => x.id === pmGetLead[1]);
+      if (!l) return send(res, 404, { ok: false, error: "Lead not found" });
+      return send(res, 200, {
+        ok: true,
+        lead: {
+          id: l.id,
+          name: l.name,
+          email: l.email,
+          phone: l.phone,
+          intent: l.intent
+        }
+      });
+    }
+
+    // Order Verification Status Query
+    if (m === "GET" && u.startsWith("/api/orders/status")) {
+      const parsedUrl = new URL("http://localhost" + req.url);
+      const ref = clip(parsedUrl.searchParams.get("ref"), 50);
+      if (!ref) return send(res, 400, { ok: false, error: "Missing order reference." });
+      const o = db.orders.find(x => x.id === ref);
+      if (!o) return send(res, 200, { ok: true, found: false });
+      return send(res, 200, {
+        ok: true,
+        found: true,
+        order: {
+          id: o.id,
+          name: o.name,
+          email: o.email,
+          product: o.product,
+          amount: o.amount,
+          status: o.status,
+          delivery_status: o.delivery_status || "PENDING",
+          created: o.created,
+          confirmed: o.confirmed
+        }
+      });
+    }
+
+    // Verified Payment Webhook / Server Confirmation Endpoint
+    if (m === "POST" && (u === "/api/webhook/payment" || u === "/api/payments/verify")) {
+      const b = await body(req);
+      const orderRef = clip(b.order_id || b.ref || (b.data && b.data.id), 50);
+      if (!orderRef) return send(res, 400, { ok: false, error: "Missing order reference." });
+
+      const o = db.orders.find(x => x.id === orderRef);
+      if (!o) return send(res, 404, { ok: false, error: "Order not found." });
+
+      const now = Date.now();
+      o.status = "PAYMENT_CONFIRMED";
+      o.confirmed = now;
+
+      if (!o.purchase_fired) {
+        o.purchase_fired = true;
+        db.events.push({ t: now, n: "purchase", id: o.id, src: o.src, dev: o.dev });
+        capi(o);
+      }
+
+      const l = db.leads.find(x => x.order_id === o.id || x.email === o.email);
+      if (l) {
+        l.status = "CONVERTED";
+        l.updated = now;
+      }
+
+      save();
+      return send(res, 200, { ok: true, message: "Payment verified successfully", order: o });
     }
 
     // Create Order & Lead
@@ -521,7 +774,8 @@ const handler = async (req, res) => {
       // Leads CSV Export with Time on Page
       if (m === "GET" && u === "/api/admin/export-leads.csv") {
         const headers = [
-          "Lead ID", "Name", "Email", "Phone", "Status", "Source", "First Source",
+          "Lead ID", "Name", "Email", "Phone", "Status", "Purchase Intention", "Intention Selected At",
+          "Consent Status", "Consent At", "Source", "First Source",
           "UTM Campaign", "UTM Medium", "UTM Content", "UTM Term", "Landing Page",
           "Referrer", "Time on Page (Seconds)", "Time on Page (Formatted)",
           "First Visit", "Last Visit", "Created At", "Order ID", "Notes"
@@ -540,7 +794,11 @@ const handler = async (req, res) => {
         const rows = (db.leads || []).map(l => {
           const secs = l.time_on_page || 0;
           return [
-            l.id, l.name, l.email, l.phone, l.status, l.src, l.fsrc,
+            l.id, l.name, l.email, l.phone, l.status, l.intent || "NONE",
+            l.intent_at ? new Date(l.intent_at).toISOString() : "",
+            l.consent ? "YES" : "NO",
+            l.consent_at ? new Date(l.consent_at).toISOString() : "",
+            l.src, l.fsrc,
             l.utm_campaign, l.utm_medium, l.utm_content, l.utm_term, l.landing,
             l.referrer, secs, fmtSecs(secs),
             l.first_visit ? new Date(l.first_visit).toISOString() : "",
